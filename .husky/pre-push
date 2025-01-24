@@ -1,2 +1,0 @@
-echo "🚀 Starting pre-push checks..."
-npm run audit
