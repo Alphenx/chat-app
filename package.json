@@ -5,9 +5,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "prepare": "husky",
-    "audit": "npm run lint && npm run build && npm audit --production --audit-level=high"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "15.1.6",
