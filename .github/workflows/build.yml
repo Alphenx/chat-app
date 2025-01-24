@@ -1,12 +1,9 @@
-name: 🛠️ Build & Analyze
+name: 📃 Sonar Code Quality Analysis
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    types: [opened, synchronize, reopened]
-
+    branches:
+      - '**'
 jobs:
   sonarqube:
     name: 🔍 SonarQube Analysis
