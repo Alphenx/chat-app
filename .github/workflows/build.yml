@@ -1,4 +1,4 @@
-name: 📃 Sonar Code Quality Analysis
+name: 🔍 Sonar Code Quality Analysis
 
 on:
   pull_request:
@@ -6,7 +6,6 @@ on:
       - '**'
 jobs:
   sonarqube:
-    name: 🔍 SonarQube Analysis
     runs-on: windows-latest
 
     steps:
