@@ -1,0 +1,47 @@
+name: ✅ Code Validation
+
+on:
+  pull_request:
+    branches:
+      - '**'
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clone the repository
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Setup Node.js
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # 3. Install dependencies
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      # 4. Check for console.* and debugger
+      - name: 🔍 Check for console statements and debugger
+        run: |
+          echo "🔎 Searching for console statements or debugger..."
+          if grep -E -r "(console\.\w+|debugger)" ./src; then
+            echo "❌ Found console statements or debugger!"
+            exit 1
+          else
+            echo "✅ No console statements or debugger found!"
+          fi
+
+      # 5. Validate the code with ESLint
+      - name: ✨ Validate the code with ESLint
+        run: |
+          echo "🚦 Running ESLint..."
+          npm run lint || (echo "❌ ESLint failed!" && exit 1)
+          echo "✅ ESLint passed!"
+
+      # 6. Final message
+      - name: 🎉 All checks passed!
+        run: echo "🚀 ✅ All checks completed successfully!"

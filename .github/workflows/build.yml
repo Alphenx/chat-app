@@ -1,0 +1,22 @@
+name: 🔍 Sonar Code Quality Analysis
+
+on:
+  pull_request:
+    branches:
+      - '**'
+jobs:
+  sonarqube:
+    runs-on: windows-latest
+
+    steps:
+      # 1. Clone the repository
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for better analysis relevance
+
+      # 2. Scan with SonarQube
+      - name: 📊 Run SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
