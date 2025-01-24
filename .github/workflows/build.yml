@@ -1,19 +1,26 @@
-name: Build
+name: 🛠️ Build & Analyze
+
 on:
   push:
     branches:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   sonarqube:
-    name: SonarQube
+    name: 🔍 SonarQube Analysis
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
+      # 1. Clone the repository
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarQube Scan
+          fetch-depth: 0 # Shallow clones should be disabled for better analysis relevance
+
+      # 2. Scan with SonarQube
+      - name: 📊 Run SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
