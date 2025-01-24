@@ -1,0 +1,66 @@
+name: Audit Workflow
+
+on:
+  push:
+    branches:
+      - '**' # Ejecutar en cualquier push
+  pull_request: # También ejecutarlo en Pull Requests
+    branches:
+      - '**'
+
+jobs:
+  audit:
+    name: 🚀 Code Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clonar el repositorio
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configurar Node.js
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # 3. Instalar dependencias
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      # 4. Buscar console.log y debugger
+      - name: 🔍 Check for console.log and debugger
+        run: |
+          echo "🔎 Searching for console.log or debugger..."
+          if grep -E -r "(console\.log|debugger)" ./src; then
+            echo "❌ Found console.log or debugger statements"
+            exit 1
+          else
+            echo "✅ No console.log or debugger found!"
+          fi
+
+      # 5. Validar ESLint
+      - name: ✨ Lint with ESLint
+        run: |
+          echo "🚦 Running ESLint..."
+          npm run lint || (echo "❌ ESLint failed!" && exit 1)
+          echo "✅ ESLint passed!"
+
+      # 6. Construir Next.js
+      - name: 🏗️ Build Next.js app
+        run: |
+          echo "🔨 Building Next.js app..."
+          npm run build || (echo "❌ Build failed!" && exit 1)
+          echo "✅ Build successful!"
+
+      # 7. Auditoría de dependencias
+      - name: 🔒 Audit dependencies
+        run: |
+          echo "🔍 Auditing dependencies..."
+          npm audit --production --audit-level=high || (echo "❌ Found vulnerable dependencies!" && exit 1)
+          echo "✅ Dependencies are secure!"
+
+      # 8. Mensaje final
+      - name: 🎉 All checks passed!
+        run: echo "🚀 ✅ All checks completed successfully!"
