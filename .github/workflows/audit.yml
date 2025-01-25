@@ -42,6 +42,13 @@ jobs:
           npm run lint || (echo "❌ ESLint failed!" && exit 1)
           echo "✅ ESLint passed!"
 
-      # 6. Final message
+      # 6. Run tests
+      - name: 🧪 Run tests
+        run: |
+          echo "🧪 Running tests..."
+          npm run test || (echo "❌ Tests failed!" && exit 1)
+          echo "✅ Tests passed!"
+
+      # 7. Final message
       - name: 🎉 All checks passed!
         run: echo "🚀 ✅ All checks completed successfully!"
