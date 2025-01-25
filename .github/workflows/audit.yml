@@ -46,7 +46,7 @@ jobs:
       - name: 🧪 Run tests
         run: |
           echo "🧪 Running tests..."
-          npm run test --coverage || (echo "❌ Tests failed!" && exit 1)
+          npm run test || (echo "❌ Tests failed!" && exit 1)
           echo "✅ Tests passed!"
 
       # 7. Final message
