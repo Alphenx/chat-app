@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'; // Extensiones para Jest como toBeInTheDocument
+import '@testing-library/jest-dom';
 import { server } from './src/tests/server';
 
 // Start MSW before testing

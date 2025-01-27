@@ -29,5 +29,3 @@ export const handlers = [
 ];
 
 export const server = setupServer(...handlers);
-
-// Debes usar estos imports para que las pruebas funcionen
