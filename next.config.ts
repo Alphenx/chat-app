@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  env: {
+    UPSTASH_URL: process.env.UPSTASH_URL,
+    UPSTASH_PASSWORD: process.env.UPSTASH_PASSWORD,
+  },
 };
 
 export default nextConfig;
