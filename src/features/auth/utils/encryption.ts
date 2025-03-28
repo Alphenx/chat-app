@@ -21,8 +21,7 @@ export async function hashPassword(password: string): Promise<string | null> {
     });
 
     return `${salt}:${derivedKey.toString('hex')}`;
-  } catch (error) {
-    console.error('Error hashing password:', error);
+  } catch {
     return null;
   }
 }
@@ -53,8 +52,7 @@ export async function verifyPassword(
     }
 
     return crypto.timingSafeEqual(derivedKeyHexBuffer, storedDerivedKeyBuffer);
-  } catch (error) {
-    console.error('Error verifying password:', error);
+  } catch {
     return null;
   }
 }
@@ -71,8 +69,7 @@ export function encryptToken(id: string, email: string, exp: number): string | n
       .digest('base64url');
 
     return `${base64Payload}.${signature}`;
-  } catch (error) {
-    console.error('Error encrypting token:', error);
+  } catch {
     return null;
   }
 }
@@ -98,8 +95,7 @@ export function decryptToken(token: string): Token | null {
 
     const payloadStr = base64UrlDecode(base64Payload);
     return JSON.parse(payloadStr);
-  } catch (error) {
-    console.error('Error decrypting token:', error);
+  } catch {
     return null;
   }
 }
