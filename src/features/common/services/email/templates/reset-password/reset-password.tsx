@@ -11,7 +11,6 @@ import {
   Section,
   Text,
 } from '@react-email/components';
-import path from 'path';
 import translations from './i18n';
 
 interface ResetPasswordEmailProps {
@@ -22,6 +21,7 @@ interface ResetPasswordEmailProps {
 
 function ResetPasswordEmail({ locale, resetLink, username }: ResetPasswordEmailProps) {
   const { t } = getServerTranslations(translations, locale, 'resetPasswordEmail');
+  const logoPath = `${process.env.NEXT_PUBLIC_VERCEL_URL ?? process.env.NEXTAUTH_URL}/logo-white.png`;
 
   return {
     head: {
@@ -127,7 +127,7 @@ function ResetPasswordEmail({ locale, resetLink, username }: ResetPasswordEmailP
     attachments: [
       {
         filename: 'logo-white.png',
-        path: path.join(process.cwd(), 'public/logo-white.png'),
+        path: logoPath,
         cid: 'logo',
       },
     ],

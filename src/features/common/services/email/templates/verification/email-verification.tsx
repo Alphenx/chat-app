@@ -11,7 +11,6 @@ import {
   Section,
   Text,
 } from '@react-email/components';
-import path from 'path';
 import translations from './i18n';
 
 interface VerificationEmailProps {
@@ -22,6 +21,7 @@ interface VerificationEmailProps {
 
 function VerificationEmail({ locale, verificationLink, username }: VerificationEmailProps) {
   const { t } = getServerTranslations(translations, locale, 'verificationEmail');
+  const logoPath = `${process.env.NEXT_PUBLIC_VERCEL_URL ?? process.env.NEXTAUTH_URL}/logo-white.png`;
 
   return {
     head: {
@@ -133,7 +133,7 @@ function VerificationEmail({ locale, verificationLink, username }: VerificationE
     attachments: [
       {
         filename: 'logo-white.png',
-        path: path.join(process.cwd(), 'public/logo-white.png'),
+        path: logoPath,
         cid: 'logo',
       },
     ],
