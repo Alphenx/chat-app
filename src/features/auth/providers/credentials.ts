@@ -1,3 +1,5 @@
+import { login, loginWithToken } from '@/features/auth/actions/auth.actions';
+import { AuthError } from '@/features/auth/errors/auth.error';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 export default CredentialsProvider({
@@ -9,14 +11,14 @@ export default CredentialsProvider({
     token: { label: 'Token', type: 'text' },
   },
   async authorize(credentials) {
-    // if (!credentials) {
-    //   throw AuthError.invalidCredentials();
-    // }
-    // if (credentials.token) {
-    //   return await loginWithToken(credentials.token);
-    // }
-    // return await login(credentials.email, credentials.password);
+    if (!credentials) {
+      throw AuthError.invalidCredentials();
+    }
 
-    return null;
+    if (credentials.token) {
+      return await loginWithToken(credentials.token);
+    }
+
+    return await login(credentials.email, credentials.password);
   },
 });
