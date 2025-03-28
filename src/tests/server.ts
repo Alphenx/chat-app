@@ -1,4 +1,4 @@
-import { HTTPStatus, HTTPStatusText } from '@/models/http';
+import { HTTPStatus, HTTPStatusText } from '@/features/common/models/http';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 

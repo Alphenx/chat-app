@@ -1,4 +1,4 @@
-import { HTTPStatus, HTTPStatusText } from '@/models/http';
+import { HTTPStatus, HTTPStatusText } from '@/features/common/models/http';
 
 describe('Testing configuration set up / MSW should be initialized with default handlers', () => {
   it('a. Should handle all routes not found (404)', async () => {
