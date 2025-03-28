@@ -1,14 +1,14 @@
-function RootPage() {
-  return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>Chat App</h1>
-      <p>
-        Modern and efficient live chat application, where users can chat with
-        each other in real-time.
-      </p>
-      <p>Working in progress...</p>
-    </div>
-  );
+import { getSession } from '@/features/auth/actions/auth.actions';
+import { redirect } from 'next/navigation';
+
+async function RootPage() {
+  const session = await getSession();
+
+  if (session) {
+    redirect('/dashboard');
+  } else {
+    redirect('/login');
+  }
 }
 
 export default RootPage;
