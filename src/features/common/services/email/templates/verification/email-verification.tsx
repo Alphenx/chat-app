@@ -1,16 +1,5 @@
 import { getServerTranslations } from '@/features/common/actions/get-server-translations';
-import {
-  Body,
-  Button,
-  Column,
-  Container,
-  Heading,
-  Img,
-  Link,
-  Row,
-  Section,
-  Text,
-} from '@react-email/components';
+import { Body, Button, Container, Heading, Link, Section, Text } from '@react-email/components';
 import translations from './i18n';
 
 interface VerificationEmailProps {
@@ -47,26 +36,6 @@ function VerificationEmail({ locale, verificationLink, username }: VerificationE
           }}
         >
           <Section style={{ margin: '1rem 0' }}>
-            {/* Logo */}
-            <Row>
-              <Column
-                style={{
-                  textAlign: 'center',
-                  gap: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <Img
-                  src='cid:logo'
-                  alt='Logo'
-                  width='auto'
-                  height='200px'
-                  style={{ margin: '0 auto' }}
-                />
-              </Column>
-            </Row>
-
             {/* Título */}
             <Heading style={{ fontSize: '24px', color: '#ffffff', margin: '20px 0' }}>
               {t('Verify Your Email Address', 'body.title')}
@@ -130,13 +99,6 @@ function VerificationEmail({ locale, verificationLink, username }: VerificationE
         </Container>
       </Body>
     ),
-    attachments: [
-      {
-        filename: 'logo-white.png',
-        path: logoPath,
-        cid: 'logo',
-      },
-    ],
   };
 }
 

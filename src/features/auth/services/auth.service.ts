@@ -96,7 +96,6 @@ class AuthService {
     });
 
     await this.emailService.sendMail({
-      attachments: component.attachments,
       body: component.body,
       from: component.head.from,
       subject: component.head.subject,
