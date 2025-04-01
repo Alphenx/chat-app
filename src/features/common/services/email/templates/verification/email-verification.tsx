@@ -1,17 +1,5 @@
 import { getServerTranslations } from '@/features/common/actions/get-server-translations';
-import {
-  Body,
-  Button,
-  Column,
-  Container,
-  Heading,
-  Img,
-  Link,
-  Row,
-  Section,
-  Text,
-} from '@react-email/components';
-import path from 'path';
+import { Body, Button, Container, Heading, Link, Section, Text } from '@react-email/components';
 import translations from './i18n';
 
 interface VerificationEmailProps {
@@ -20,7 +8,7 @@ interface VerificationEmailProps {
   username: string;
 }
 
-function VerificationEmail({ locale, verificationLink, username }: VerificationEmailProps) {
+async function VerificationEmail({ locale, verificationLink, username }: VerificationEmailProps) {
   const { t } = getServerTranslations(translations, locale, 'verificationEmail');
 
   return {
@@ -47,32 +35,10 @@ function VerificationEmail({ locale, verificationLink, username }: VerificationE
           }}
         >
           <Section style={{ margin: '1rem 0' }}>
-            {/* Logo */}
-            <Row>
-              <Column
-                style={{
-                  textAlign: 'center',
-                  gap: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <Img
-                  src='cid:logo'
-                  alt='Logo'
-                  width='auto'
-                  height='200px'
-                  style={{ margin: '0 auto' }}
-                />
-              </Column>
-            </Row>
-
-            {/* Título */}
             <Heading style={{ fontSize: '24px', color: '#ffffff', margin: '20px 0' }}>
               {t('Verify Your Email Address', 'body.title')}
             </Heading>
 
-            {/* Mensaje */}
             <Text style={{ fontSize: '16px', color: '#b0b0b0', margin: '10px 0' }}>
               {t(
                 `Hello, ${username}. Please verify your email address to continue.`,
@@ -81,7 +47,6 @@ function VerificationEmail({ locale, verificationLink, username }: VerificationE
               )}
             </Text>
 
-            {/* Botón de verificación */}
             <Button
               href={verificationLink}
               style={{
@@ -99,7 +64,6 @@ function VerificationEmail({ locale, verificationLink, username }: VerificationE
               {t('Verify Email', 'body.button')}
             </Button>
 
-            {/* Mensaje de seguridad */}
             <Text style={{ fontSize: '14px', color: '#888888', marginTop: '10px' }}>
               {t(
                 "If you didn't create an account, you can safely ignore this email.",
@@ -108,7 +72,6 @@ function VerificationEmail({ locale, verificationLink, username }: VerificationE
             </Text>
           </Section>
 
-          {/* Pie de página */}
           <Section
             style={{
               borderTop: '1px solid #333',
@@ -130,13 +93,6 @@ function VerificationEmail({ locale, verificationLink, username }: VerificationE
         </Container>
       </Body>
     ),
-    attachments: [
-      {
-        filename: 'logo-white.png',
-        path: path.join(process.cwd(), 'public/logo-white.png'),
-        cid: 'logo',
-      },
-    ],
   };
 }
 

@@ -89,14 +89,13 @@ class AuthService {
   }
 
   async sendVerificationEmail(name: string, email: string, token: string): Promise<void> {
-    const component = VerificationEmail({
+    const component = await VerificationEmail({
       locale: 'en',
-      verificationLink: `${process.env.NEXTAUTH_URL}/login?token=${token}`,
+      verificationLink: `${process.env.NEXT_PUBLIC_VERCEL_URL}/login?token=${token}`,
       username: name,
     });
 
     await this.emailService.sendMail({
-      attachments: component.attachments,
       body: component.body,
       from: component.head.from,
       subject: component.head.subject,
@@ -113,12 +112,11 @@ class AuthService {
 
     const component = ResetPasswordEmail({
       locale: 'en',
-      resetLink: `${process.env.NEXTAUTH_URL}/forgot-password?token=${token}`,
+      resetLink: `${process.env.NEXT_PUBLIC_VERCEL_URL}/forgot-password?token=${token}`,
       username: user.name,
     });
 
     await this.emailService.sendMail({
-      attachments: component.attachments,
       body: component.body,
       from: component.head.from,
       subject: component.head.subject,
