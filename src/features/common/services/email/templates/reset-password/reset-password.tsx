@@ -1,16 +1,5 @@
 import { getServerTranslations } from '@/features/common/actions/get-server-translations';
-import {
-  Body,
-  Button,
-  Column,
-  Container,
-  Heading,
-  Img,
-  Link,
-  Row,
-  Section,
-  Text,
-} from '@react-email/components';
+import { Body, Button, Container, Heading, Link, Section, Text } from '@react-email/components';
 import translations from './i18n';
 
 interface ResetPasswordEmailProps {
@@ -21,7 +10,6 @@ interface ResetPasswordEmailProps {
 
 function ResetPasswordEmail({ locale, resetLink, username }: ResetPasswordEmailProps) {
   const { t } = getServerTranslations(translations, locale, 'resetPasswordEmail');
-  const logoPath = `${process.env.NEXT_PUBLIC_VERCEL_URL ?? process.env.NEXTAUTH_URL}/logo-white.png`;
 
   return {
     head: {
@@ -47,25 +35,6 @@ function ResetPasswordEmail({ locale, resetLink, username }: ResetPasswordEmailP
           }}
         >
           <Section style={{ margin: '1rem 0' }}>
-            <Row>
-              <Column
-                style={{
-                  textAlign: 'center',
-                  gap: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <Img
-                  src='cid:logo'
-                  alt='Logo'
-                  width='auto'
-                  height='200px'
-                  style={{ margin: '0 auto' }}
-                />
-              </Column>
-            </Row>
-
             <Heading style={{ fontSize: '24px', color: '#ffffff', margin: '20px 0' }}>
               {t('Reset Your Password', 'body.title')}
             </Heading>
@@ -124,13 +93,6 @@ function ResetPasswordEmail({ locale, resetLink, username }: ResetPasswordEmailP
         </Container>
       </Body>
     ),
-    attachments: [
-      {
-        filename: 'logo-white.png',
-        path: logoPath,
-        cid: 'logo',
-      },
-    ],
   };
 }
 

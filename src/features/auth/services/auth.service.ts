@@ -89,7 +89,7 @@ class AuthService {
   }
 
   async sendVerificationEmail(name: string, email: string, token: string): Promise<void> {
-    const component = VerificationEmail({
+    const component = await VerificationEmail({
       locale: 'en',
       verificationLink: `${process.env.NEXT_PUBLIC_VERCEL_URL}/login?token=${token}`,
       username: name,
@@ -117,7 +117,6 @@ class AuthService {
     });
 
     await this.emailService.sendMail({
-      attachments: component.attachments,
       body: component.body,
       from: component.head.from,
       subject: component.head.subject,
