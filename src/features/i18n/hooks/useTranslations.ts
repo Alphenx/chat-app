@@ -24,7 +24,7 @@ export function useTranslations<N extends Namespace, Keys extends readonly strin
     }
 
     return createTranslator(nsTranslations, namespace, ...keys);
-  }, [nsTranslations, keys, namespace]);
+  }, [nsTranslations, keys, namespace]) as TranslatorOf<N, Keys>;
 
   return { t };
 }
