@@ -45,11 +45,9 @@ export function TranslationsProvider({
 
   const loadNamespace = useCallback(
     async <N extends Namespace>(namespace: N) => {
-      try {
-        const translations = await translationsLoader[namespace](locale);
+      const translations = await translationsLoader[namespace](locale);
+      if (translations) {
         setTranslations((prev) => ({ ...prev, [namespace]: translations }));
-      } catch {
-        console.warn(`Error loading translations for namespace "${namespace}":`);
       }
     },
     [locale]

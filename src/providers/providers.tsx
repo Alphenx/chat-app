@@ -1,10 +1,10 @@
 'use client';
 
 import useClient from '@/features/common/hooks/useClient';
+import { TranslationsProvider } from '@/features/i18n/contexts/translations.context';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { memo, ReactNode } from 'react';
-import { TranslationsProvider } from '../features/i18n/contexts/translations.context';
 
 type Props = {
   children: ReactNode;
