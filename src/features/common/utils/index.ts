@@ -1,2 +1,2 @@
-export { getNestedValue, isObject, deepMerge } from './object-utils';
-export { applyInterpolation } from './string-utils';
+export { applyInterpolation } from './string/apply-interpolation';
+export { applyRichText } from './string/apply-rich-text';
