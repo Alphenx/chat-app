@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from 'react';
 import useClient from './useClient';
 
-type FormError<T> = Partial<Record<keyof T, boolean | string>>;
+type FormError<T> = Partial<Record<keyof T, boolean | string | ReactNode>>;
 
 interface Props<T> {
   initialValues: T;
@@ -11,7 +11,7 @@ interface Props<T> {
 
 function useForm<T>({ initialValues, validate, onSubmit }: Props<T>) {
   const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState<Partial<Record<keyof T, boolean | string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof T, boolean | string | ReactNode>>>({});
   const [loading, setLoading] = useState(false);
   const [invalid, setInvalid] = useState(true);
 
@@ -29,12 +29,12 @@ function useForm<T>({ initialValues, validate, onSubmit }: Props<T>) {
   }, [values, validate, isClient]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 

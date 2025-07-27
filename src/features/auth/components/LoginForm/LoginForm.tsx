@@ -8,8 +8,9 @@ import {
   FormTitle,
 } from '@/features/auth/components/common';
 import { Feedback } from '@/features/auth/components/common/FormFeedback';
-import translations from '@/features/auth/i18n';
-import { useForm, useTranslations } from '@/features/common/hooks';
+import { useForm } from '@/features/common/hooks';
+import { extractText } from '@/features/common/utils';
+import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Button, HStack, Input } from '@chakra-ui/react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
@@ -21,7 +22,7 @@ interface LoginFormValues {
 }
 
 export default function LoginForm() {
-  const { t } = useTranslations(translations, 'auth', 'login');
+  const { t } = useTranslations('auth', 'login');
   const [feedback, setFeedback] = useQueryErrorFeedback();
   const { email, isRemembered, toggleRemember, handleRemember } = useRememberEmail();
 
@@ -56,7 +57,7 @@ export default function LoginForm() {
           name='email'
           value={values.email}
           onChange={handleChange}
-          placeholder={t('you@example.com', 'form.fields.email.placeholder')}
+          placeholder={extractText(t('you@example.com', 'form.fields.email.placeholder'))}
           autoComplete='email'
         />
       </Field>

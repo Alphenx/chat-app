@@ -1,15 +1,19 @@
 'use client';
 
 import { Field, Link } from '@/components';
-import { FormContainer, FormFeedback, FormTitle } from '@/features/auth/components/common';
-import { Feedback } from '@/features/auth/components/common/FormFeedback';
-import translations from '@/features/auth/i18n';
-import { useForm, useTranslations } from '@/features/common/hooks';
+import { resetPassword } from '@/features/auth/actions/auth.actions';
+import {
+  Feedback,
+  FormContainer,
+  FormFeedback,
+  FormPasswordRequirements,
+  FormTitle,
+} from '@/features/auth/components/common';
+import { useForm } from '@/features/common/hooks';
+import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Box, Button, Input } from '@chakra-ui/react';
 import { redirect } from 'next/navigation';
 import { useState } from 'react';
-import { resetPassword } from '../../actions/auth.actions';
-import FormPasswordRequirements from '../common/FormPasswordRequirements';
 import { validateResetPasswordForm } from './validations';
 
 export interface ResetPasswordFormValues {
@@ -18,7 +22,7 @@ export interface ResetPasswordFormValues {
 }
 
 function ResetPasswordForm({ token }: { token: string }) {
-  const { t } = useTranslations(translations, 'auth', 'forgotPassword', 'reset');
+  const { t } = useTranslations('auth', 'forgotPassword', 'reset');
   const [showRequirements, setShowRequirements] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
 
