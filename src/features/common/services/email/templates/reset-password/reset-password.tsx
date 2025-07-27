@@ -1,15 +1,13 @@
-import { getServerTranslations } from '@/features/common/actions/get-server-translations';
+import { getTranslations } from '@/features/i18n/utils/get-server-translations';
 import { Body, Button, Container, Heading, Link, Section, Text } from '@react-email/components';
-import translations from './i18n';
 
 interface ResetPasswordEmailProps {
-  locale: string;
   resetLink: string;
   username: string;
 }
 
-function ResetPasswordEmail({ locale, resetLink, username }: ResetPasswordEmailProps) {
-  const { t } = getServerTranslations(translations, locale, 'resetPasswordEmail');
+async function ResetPasswordEmail({ resetLink, username }: ResetPasswordEmailProps) {
+  const { t } = await getTranslations('resetPasswordEmail');
 
   return {
     head: {
