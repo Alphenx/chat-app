@@ -1,4 +1,4 @@
-export const en = {
+const en = {
   verificationEmail: {
     head: {
       subject: 'Verify your email',
@@ -12,3 +12,5 @@ export const en = {
     },
   },
 };
+
+export default en;
