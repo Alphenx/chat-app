@@ -1,15 +1,13 @@
-import { getServerTranslations } from '@/features/common/actions/get-server-translations';
+import { getTranslations } from '@/features/i18n/utils';
 import { Body, Button, Container, Heading, Link, Section, Text } from '@react-email/components';
-import translations from './i18n';
 
 interface VerificationEmailProps {
-  locale: string;
   verificationLink: string;
   username: string;
 }
 
-async function VerificationEmail({ locale, verificationLink, username }: VerificationEmailProps) {
-  const { t } = getServerTranslations(translations, locale, 'verificationEmail');
+async function VerificationEmail({ verificationLink, username }: VerificationEmailProps) {
+  const { t } = await getTranslations('verificationEmail');
 
   return {
     head: {

@@ -1,4 +1,4 @@
-export const en = {
+const en = {
   resetPasswordEmail: {
     head: {
       subject: 'Reset your password and recover your account',
@@ -11,4 +11,6 @@ export const en = {
       footer: "If you didn't request a password reset, please ignore this email.",
     },
   },
-};
+} as const;
+
+export default en;

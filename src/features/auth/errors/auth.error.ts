@@ -1,34 +1,36 @@
-import translations from '@/features/auth/i18n';
-import { BaseError } from '@/features/common/errors/base.error';
+import BaseError from '@/features/common/errors/base.error';
 
 export class AuthError extends BaseError {
-  private static t = this.getTranslator(translations, 'auth', 'errors');
-
-  static defaultError(): AuthError {
-    return new AuthError(this.t('Something went wrong. Please try again.', 'defaultError'));
+  private static async throw(...args: Parameters<TranslatorOf<'auth', ['errors']>>) {
+    const translator = await this.getTranslator('auth', 'errors');
+    return new this(translator(...args));
   }
 
-  static userAlreadyExists(): AuthError {
-    return new AuthError(this.t('This account already exists.', 'userAlreadyExists'));
+  static defaultError() {
+    return this.throw('Something went wrong. Please try again.', 'defaultError');
   }
 
-  static userNotFound(): AuthError {
-    return new AuthError(this.t('No account found.', 'userNotFound'));
+  static userAlreadyExists() {
+    return this.throw('This account already exists.', 'userAlreadyExists');
   }
 
-  static invalidCredentials(): AuthError {
-    return new AuthError(this.t('Invalid credentials.', 'invalidCredentials'));
+  static userNotFound() {
+    return this.throw('No account found.', 'userNotFound');
   }
 
-  static unauthorized(): AuthError {
-    return new AuthError(this.t('Unauthorized access.', 'unauthorized'));
+  static invalidCredentials() {
+    return this.throw('Invalid credentials.', 'invalidCredentials');
   }
 
-  static emailNotValidated(): AuthError {
-    return new AuthError(this.t('Email not validated.', 'emailNotValidated'));
+  static unauthorized() {
+    return this.throw('Unauthorized access.', 'unauthorized');
   }
 
-  static invalidToken(): AuthError {
-    return new AuthError(this.t('Invalid or expired token.', 'invalidToken'));
+  static emailNotValidated() {
+    return this.throw('Email not validated.', 'emailNotValidated');
+  }
+
+  static invalidToken() {
+    return this.throw('Invalid or expired token.', 'invalidToken');
   }
 }

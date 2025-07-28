@@ -1,8 +1,8 @@
+import AccountRepository from '@/features/account/repositories/account.repository';
 import { RESET_PASSWORD_TTL, VERIFICATION_TOKEN_TTL } from '@/features/auth/utils/constants';
 import { decryptToken, encryptToken, verifyPassword } from '@/features/auth/utils/encryption';
-import UserRepository from '@/features/user/repositories/user.repository';
 
-class AuthRepository extends UserRepository<PrivateUser> {
+export class AuthRepository extends AccountRepository<PrivateUser> {
   constructor(db: Database) {
     super(db);
     this.key = {
@@ -13,12 +13,12 @@ class AuthRepository extends UserRepository<PrivateUser> {
   }
 
   async checkPassword(id: UserId, password: string): Promise<boolean> {
-    const user = await this.getValue<PrivateUser>(this.key.user(id));
+    const user = await this.get(this.key.user(id));
     return user ? ((await verifyPassword(password, user.password)) ?? false) : false;
   }
 
   async checkEmailVerified(id: UserId): Promise<boolean> {
-    const user = await this.getValue<PrivateUser>(this.key.user(id));
+    const user = await this.get(this.key.user(id));
     return user?.emailVerified ?? false;
   }
 
@@ -48,8 +48,7 @@ class AuthRepository extends UserRepository<PrivateUser> {
     token: string,
     keyFn: (id: UserId) => string
   ): Promise<Token | null> {
-    if (!token) return null;
-    const decryptedToken = decryptToken(token);
+    const decryptedToken = await decryptToken(token);
     if (!decryptedToken) return null;
 
     const { id, email, exp } = decryptedToken;

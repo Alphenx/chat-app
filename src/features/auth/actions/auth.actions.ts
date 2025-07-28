@@ -6,9 +6,13 @@ import AuthService from '@/features/auth/services/auth.service';
 import { EmailService } from '@/features/common/services/email';
 import { db } from '@/lib/db/connection';
 import { getServerSession } from 'next-auth';
+import nodemailer from 'nodemailer';
 
 // AUTH SERVER ACTIONS
-const authService = new AuthService(new AuthRepository(db), new EmailService());
+const authService = new AuthService(
+  new AuthRepository(db),
+  new EmailService(nodemailer.createTransport)
+);
 
 export async function getSession() {
   return await getServerSession(authOptions);

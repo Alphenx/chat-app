@@ -15,7 +15,7 @@ async function loadNamespace<N extends Namespace>(
   const key = `${namespace}:${locale}` as StoreKey;
 
   // Check if the translations are already in the store
-  if (store.has(key)) return store.get(key)!;
+  if (store.has(key)) return store.get(key)! as Promise<TranslationsOf<N, Locale>>;
 
   const promise = (async () => {
     const translations = await translationsLoader[namespace](locale);
@@ -27,7 +27,7 @@ async function loadNamespace<N extends Namespace>(
   })();
 
   store.set(key, promise);
-  return await promise;
+  return (await promise) as Promise<TranslationsOf<N, Locale>>;
 }
 
 export async function getTranslations<N extends Namespace, Keys extends readonly string[] = []>(
@@ -35,7 +35,7 @@ export async function getTranslations<N extends Namespace, Keys extends readonly
   ...keys: Keys
 ): Promise<{ t: TranslatorOf<N, Keys> }> {
   const locale = await detectLocaleServer();
-  const nsTranslations = await loadNamespace(namespace, locale);
+  const nsTranslations = (await loadNamespace(namespace, locale)) as TranslationObject;
 
   const t = createTranslator(nsTranslations, namespace, ...keys) as TranslatorOf<N, Keys>;
 

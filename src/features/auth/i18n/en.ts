@@ -1,4 +1,4 @@
-export const en = {
+const en = {
   auth: {
     login: {
       form: {
@@ -127,3 +127,5 @@ export const en = {
     },
   },
 } as const;
+
+export default en;

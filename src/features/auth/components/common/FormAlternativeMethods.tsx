@@ -1,5 +1,4 @@
-import translations from '@/features/auth/i18n';
-import { useTranslations } from '@/features/common/hooks';
+import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Button, HStack, Separator, Text } from '@chakra-ui/react';
 import { signIn } from 'next-auth/react';
 import { FaGoogle } from 'react-icons/fa';
@@ -17,7 +16,7 @@ export default FormAlternativeMethods;
 
 // GOOGLE
 function SignInWithGoogle() {
-  const { t } = useTranslations(translations, 'auth', 'alternativeMethods');
+  const { t } = useTranslations('auth', 'alternativeMethods');
 
   async function onClick() {
     await signIn('google', { callbackUrl: '/dashboard' });

@@ -1,7 +1,9 @@
-export const en = {
+const en = {
   email: {
     errors: {
       defaultError: 'An error occurred while processing the request',
     },
   },
 } as const;
+
+export default en;

@@ -31,7 +31,7 @@ function Toaster({ toaster }: ToasterProps) {
             {toast.action && (
               <ChakraToast.ActionTrigger>{toast.action.label}</ChakraToast.ActionTrigger>
             )}
-            {toast.closable && <ChakraToast.CloseTrigger />}
+            <ChakraToast.CloseTrigger />
           </ChakraToast.Root>
         )}
       </ChakraToaster>
