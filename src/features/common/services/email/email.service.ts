@@ -35,7 +35,7 @@ class EmailService {
       mailOptions.html = await render(body);
       await this.transporter.sendMail(mailOptions as SMTPTransport.Options);
     } catch (err) {
-      throw await EmailError.invalidTransport(err);
+      throw EmailError.invalidTransport(err);
     }
   }
 }

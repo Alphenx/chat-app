@@ -1,10 +1,7 @@
 import BaseError from '@/features/common/errors/base.error';
 
 export class AuthError extends BaseError {
-  private static async throw(...args: Parameters<TranslatorOf<'auth', ['errors']>>) {
-    const translator = await this.getTranslator('auth', 'errors');
-    return new this(translator(...args));
-  }
+  private static throw = this.getTranslator('auth', 'errors');
 
   static defaultError() {
     return this.throw('Something went wrong. Please try again.', 'defaultError');

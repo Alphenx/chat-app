@@ -1,10 +1,7 @@
 import BaseError from '@/features/common/errors/base.error';
 
 export class EmailError extends BaseError {
-  private static async throw(...args: Parameters<TranslatorOf<'email', ['errors']>>) {
-    const translator = await this.getTranslator('email', 'errors');
-    return new this(translator(...args));
-  }
+  private static throw = this.getTranslator('email', 'errors');
 
   static invalidTransport(error: unknown) {
     if (error instanceof Error) {
