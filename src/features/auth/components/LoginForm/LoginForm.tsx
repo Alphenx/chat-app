@@ -11,7 +11,7 @@ import useLogin from '@/features/auth/hooks/useLogin';
 import useRememberEmail from '@/features/auth/hooks/useRememberEmail';
 import { AppRoute } from '@/features/common/constants/routes';
 import { useForm } from '@/features/common/hooks';
-import { extractText } from '@/features/common/utils';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
 import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Button, HStack, Input } from '@chakra-ui/react';
 import { signIn } from 'next-auth/react';
