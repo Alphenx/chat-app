@@ -1,5 +1,5 @@
 import { passwordRequirements } from '@/features/auth/components/common/FormPasswordRequirements';
-import { validateForm } from '@/features/common/utils';
+import { validateForm } from '@/features/common/utils/validators/i18n-form-validator';
 import { RegisterFormValues } from './RegisterForm';
 
 // REGISTER FORM VALIDATION

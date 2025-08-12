@@ -29,7 +29,7 @@ export class AuthRepository extends AccountRepository<PrivateUser> {
     keyFn: (id: UserId) => string
   ): Promise<string | null> {
     const expiration = Math.floor(Date.now() / 1000) + ttl;
-    const encryptedToken = encryptToken(id, email, expiration);
+    const encryptedToken = await encryptToken(id, email, expiration);
 
     if (!encryptedToken) return null;
 

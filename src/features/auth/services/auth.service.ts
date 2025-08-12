@@ -4,7 +4,8 @@ import { hashPassword } from '@/features/auth/utils/encryption';
 import type EmailService from '@/features/common/services/email/email.service';
 import ResetPasswordEmail from '@/features/common/services/email/templates/reset-password/reset-password';
 import VerificationEmail from '@/features/common/services/email/templates/verification/email-verification';
-import { CatchAll, extractText } from '@/features/common/utils';
+import { CatchAll } from '@/features/common/utils/decorators/catch';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
 
 @CatchAll(() => AuthError.defaultError())
 export class AuthService {

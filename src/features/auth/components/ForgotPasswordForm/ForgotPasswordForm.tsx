@@ -5,7 +5,7 @@ import { sendResetPasswordEmail } from '@/features/auth/actions/auth.actions';
 import { FormContainer, FormFeedback, FormTitle } from '@/features/auth/components/common';
 import { Feedback } from '@/features/auth/components/common/FormFeedback';
 import { useForm } from '@/features/common/hooks';
-import { extractText } from '@/features/common/utils';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
 import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Button, Input } from '@chakra-ui/react';
 import { useState } from 'react';

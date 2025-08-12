@@ -1,4 +1,4 @@
-import { extractText } from '@/features/common/utils';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
 import { getTranslations } from '@/features/i18n/utils/get-server-translations';
 import { ReactNode } from 'react';
 

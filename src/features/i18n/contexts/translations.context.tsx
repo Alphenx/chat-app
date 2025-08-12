@@ -1,3 +1,4 @@
+import { INITIAL_NAMESPACES } from '@/features/i18n/config';
 import { translationsLoader } from '@/features/i18n/utils/translations-loader';
 import {
   createContext,
@@ -33,7 +34,7 @@ export function useTranslationsContext(): TranslationsContextValue {
 
 export function TranslationsProvider({
   initialLocale,
-  initialNamespaces = [],
+  initialNamespaces = INITIAL_NAMESPACES,
   translations: initialTranslations = {},
   children,
 }: {

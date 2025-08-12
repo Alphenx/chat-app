@@ -11,7 +11,7 @@ import {
   FormTitle,
 } from '@/features/auth/components/common';
 import { useForm } from '@/features/common/hooks';
-import { extractText } from '@/features/common/utils';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
 import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Box, Button, Input } from '@chakra-ui/react';
 import { useState } from 'react';

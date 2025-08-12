@@ -1,6 +1,7 @@
-import { applyInterpolation, applyRichText } from '@/features/common/utils';
+import { applyInterpolation } from '@/features/common/utils/string/apply-interpolation';
+import { applyRichText } from '@/features/common/utils/string/apply-rich-text';
 
-export function createTranslator<T extends TranslationObject, Keys extends string[] = []>(
+export function createTranslator<T extends object, Keys extends string[] = []>(
   translations: T,
   ...keys: Keys
 ): Translator<T, Keys> {

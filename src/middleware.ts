@@ -1,31 +1,25 @@
 import { AppRoute, PUBLIC_ROUTES, STATIC_PATHS } from '@/features/common/constants/routes';
-import type { NextRequestWithAuth } from 'next-auth/middleware';
-import { withAuth } from 'next-auth/middleware';
-import { NextResponse } from 'next/server';
+import { getToken, JWT } from 'next-auth/jwt';
+import { NextResponse, type NextRequest } from 'next/server';
 
-export default withAuth(
-  function middleware(req: NextRequestWithAuth) {
-    const { pathname } = req.nextUrl;
-    const token = req.nextauth.token;
-    const isAuthenticated = !!token;
+export async function middleware(req: NextRequest) {
+  const { pathname, origin } = req.nextUrl;
 
-    if (isStaticPath(pathname)) return NextResponse.next();
+  if (isStaticPath(pathname)) return NextResponse.next();
 
-    if (isAuthenticated && isPublicRoute(pathname)) {
-      return NextResponse.redirect(new URL(AppRoute.DASHBOARD, req.url));
-    }
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const validToken = isValidToken(token);
 
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        const pathname = req.nextUrl.pathname;
-        return isStaticPath(pathname) || isPublicRoute(pathname) || !!token;
-      },
-    },
+  if (!validToken && !isPublicRoute(pathname)) {
+    return NextResponse.redirect(new URL(AppRoute.LOGIN, origin));
   }
-);
+
+  if (validToken && isPublicRoute(pathname)) {
+    return NextResponse.redirect(new URL(AppRoute.DASHBOARD, origin));
+  }
+
+  return NextResponse.next();
+}
 
 function isPublicRoute(pathname: string) {
   return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
@@ -33,6 +27,14 @@ function isPublicRoute(pathname: string) {
 
 function isStaticPath(pathname: string) {
   return STATIC_PATHS.some((path) => pathname.startsWith(path));
+}
+
+function isValidToken(token: JWT | null) {
+  if (!token) return false;
+  if (!token.exp || typeof token.exp !== 'number') return false;
+  if (Date.now() / 1000 >= token.exp) return false;
+  if (!token.id || !token.email) return false;
+  return true;
 }
 
 export const config = {
