@@ -5,8 +5,6 @@
  * DEV MODE
  */
 
-import type * as authTranslations from '@/features/auth/i18n';
-
 export type TranslationModules = {
-  auth: typeof authTranslations;
-} & TranslationObject;
+  auth: typeof import('@/features/auth/i18n');
+};

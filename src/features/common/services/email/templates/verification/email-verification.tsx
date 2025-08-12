@@ -1,4 +1,4 @@
-import { getTranslations } from '@/features/i18n/utils';
+import { getTranslations } from '@/features/i18n/utils/get-server-translations';
 import { Body, Button, Container, Heading, Link, Section, Text } from '@react-email/components';
 
 interface VerificationEmailProps {

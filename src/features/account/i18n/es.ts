@@ -1,7 +1,7 @@
 const es = {
-  user: {
+  account: {
     errors: {
-      defaultError: 'Algo salió mal. Por favor, inténtalo de nuevo.',
+      defaultError: 'Algo salió mal. Por favor, inténtalo de nuevo más tarde.',
       userAlreadyExists: 'Esta cuenta ya existe.',
       userNotFound: 'Usuario no encontrado.',
       alreadyFriend: 'Este usuario ya es un amigo.',
