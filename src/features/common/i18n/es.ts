@@ -1,5 +1,6 @@
 const es = {
   common: {
+    defaultError: 'Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.',
     globalError: {
       title: 'Algo salió mal',
       message: 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.',

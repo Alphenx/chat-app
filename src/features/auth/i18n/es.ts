@@ -2,128 +2,128 @@ const es = {
   auth: {
     login: {
       form: {
-        title: 'Log In',
+        title: 'Iniciar sesión',
         fields: {
           email: {
-            label: 'Email',
-            placeholder: 'Enter your email address',
+            label: 'Correo electrónico',
+            placeholder: 'Introduce tu correo electrónico',
           },
           password: {
-            label: 'Password',
-            placeholder: 'Enter your password',
+            label: 'Contraseña',
+            placeholder: 'Introduce tu contraseña',
           },
         },
-        submit: 'Log In',
+        submit: 'Entrar',
       },
-      linkToRegister: 'Don’t have an account? Sign up now',
-      linkToForgotPassword: 'Forgot your password?',
-      rememberMeLabel: 'Remember me',
+      linkToRegister: '¿No tienes cuenta? Regístrate ahora',
+      linkToForgotPassword: '¿Has olvidado tu contraseña?',
+      rememberMeLabel: 'Recuérdame',
     },
     register: {
       form: {
-        title: 'Create Your Account',
+        title: 'Crea tu cuenta',
         fields: {
           name: {
-            label: 'Full Name',
-            placeholder: 'Enter your full name',
+            label: 'Nombre completo',
+            placeholder: 'Introduce tu nombre completo',
           },
           email: {
-            label: 'Email',
-            placeholder: 'Enter your email address',
+            label: 'Correo electrónico',
+            placeholder: 'Introduce tu correo electrónico',
           },
           password: {
-            label: 'Password',
-            placeholder: 'Create a strong password',
+            label: 'Contraseña',
+            placeholder: 'Crea una contraseña segura',
           },
           confirmPassword: {
-            label: 'Confirm Password',
-            placeholder: 'Re-enter your password',
+            label: 'Confirmar contraseña',
+            placeholder: 'Vuelve a introducir tu contraseña',
           },
         },
         errors: {
           name: {
-            required: 'Please provide your full name',
+            required: 'Por favor, indica tu nombre completo',
           },
           email: {
-            required: 'Email is required',
-            invalid: 'Please enter a valid email address',
+            required: 'El correo electrónico es obligatorio',
+            invalid: 'Introduce un correo electrónico válido',
           },
           password: {
-            required: 'Password is required',
-            requirements: 'Password must meet the security requirements',
-            mismatch: 'Passwords do not match',
+            required: 'La contraseña es obligatoria',
+            requirements: 'La contraseña debe cumplir los requisitos de seguridad',
+            mismatch: 'Las contraseñas no coinciden',
           },
         },
-        submit: 'Sign Up',
+        submit: 'Registrarse',
       },
-      linkToLogin: 'Already have an account? Log in here',
+      linkToLogin: '¿Ya tienes cuenta? Inicia sesión aquí',
       feedback: {
         emailVerification:
-          'We’ve sent a verification email to your inbox. Please check it to verify your account.',
+          'Te hemos enviado un correo de verificación. Por favor, revisa tu bandeja de entrada para verificar tu cuenta.',
       },
     },
     alternativeMethods: {
-      google: 'Sign in with Google',
+      google: 'Acceder con Google',
     },
     forgotPassword: {
       forgot: {
         form: {
-          title: 'Recover Your Account',
+          title: 'Recupera tu cuenta',
           fields: {
             email: {
-              label: 'Email',
-              placeholder: 'Enter your email address',
+              label: 'Correo electrónico',
+              placeholder: 'Introduce tu correo electrónico',
             },
           },
-          submit: 'Send Recovery Link',
+          submit: 'Enviar enlace de recuperación',
         },
         feedback: {
-          emailVerification: 'We’ve sent a recovery link to your email. Check your inbox.',
+          emailVerification: 'Te hemos enviado un enlace de recuperación. Revisa tu correo.',
         },
-        linkToLogin: 'Return to Log In',
+        linkToLogin: 'Volver a iniciar sesión',
       },
       reset: {
         form: {
-          title: 'Set a New Password',
+          title: 'Establece una nueva contraseña',
           fields: {
             password: {
-              label: 'New Password',
-              placeholder: 'Enter a new password',
+              label: 'Nueva contraseña',
+              placeholder: 'Introduce una nueva contraseña',
             },
             confirmPassword: {
-              label: 'Confirm New Password',
-              placeholder: 'Re-enter the new password',
+              label: 'Confirmar nueva contraseña',
+              placeholder: 'Vuelve a introducir la nueva contraseña',
             },
           },
-          submit: 'Reset Password',
+          submit: 'Restablecer contraseña',
           errors: {
             password: {
-              required: 'New password is required',
-              requirements: 'Password must meet the security requirements',
-              mismatch: 'Passwords do not match',
+              required: 'La nueva contraseña es obligatoria',
+              requirements: 'La contraseña debe cumplir los requisitos de seguridad',
+              mismatch: 'Las contraseñas no coinciden',
             },
           },
         },
         feedback: {
-          passwordReset: 'Your password has been successfully reset.',
+          passwordReset: 'Tu contraseña se ha restablecido correctamente.',
         },
-        linkToLogin: 'Return to Log In',
+        linkToLogin: 'Volver a iniciar sesión',
       },
     },
     errors: {
-      defaultError: 'An error occurred. Please try again later.',
-      invalidCredentials: 'Incorrect email or password.',
-      userAlreadyExists: 'An account with this email already exists.',
-      userNotFound: 'No account found with this email.',
-      unauthorized: 'You are not authorized to perform this action.',
-      emailNotValidated: 'Please verify your email to continue.',
-      invalidToken: 'The link is invalid or has expired.',
+      defaultError: 'Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.',
+      invalidCredentials: 'Correo electrónico o contraseña incorrectos.',
+      userAlreadyExists: 'Ya existe una cuenta registrada con estos datos.',
+      userNotFound: 'No se ha podido encontrar al usuario.',
+      unauthorized: 'No estás autorizado para realizar esta acción.',
+      emailNotValidated: 'Por favor, verifica tu correo electrónico para continuar.',
+      invalidToken: 'El enlace no es válido o ha caducado.',
     },
     passwordRequirements: {
-      length: 'Must be at least 8 characters long',
-      case: 'Include both uppercase and lowercase letters',
-      number: 'Include at least one number',
-      special: 'Include at least one special character',
+      length: 'Debe tener al menos 8 caracteres',
+      case: 'Incluye letras mayúsculas y minúsculas',
+      number: 'Incluye al menos un número',
+      special: 'Incluye al menos un carácter especial',
     },
   },
 } as const;
