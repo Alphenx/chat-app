@@ -7,6 +7,13 @@
 export const FALLBACK_LOCALE = 'en';
 export const LOCALES = ['en', 'es'] as const;
 
-export const NAMESPACES = ['auth'] as const;
+export const NAMESPACES = [
+  'auth',
+  'common',
+  'account',
+  'email',
+  'resetPasswordEmail',
+  'verificationEmail',
+] as const;
 
-export const INITIAL_NAMESPACES: Namespace[] = ['auth'] as const;
+export const INITIAL_NAMESPACES: Namespace[] = ['auth', 'common'] as const;

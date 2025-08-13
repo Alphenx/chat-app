@@ -1,4 +1,2 @@
-import { en } from './en';
-
-const translations = { en };
-export default translations;
+export { default as en } from './en';
+export { default as es } from './es';

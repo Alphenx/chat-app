@@ -1,6 +1,7 @@
 import { Alert } from '@/components';
+import { ReactNode } from 'react';
 
-export type Feedback = { message: string; status: 'error' | 'success' } | null;
+export type Feedback = { message: ReactNode; status: 'error' | 'success' } | null;
 
 interface FormFeedbackProps {
   feedback: Feedback;

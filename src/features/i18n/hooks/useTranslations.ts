@@ -8,15 +8,15 @@ export function useTranslations<N extends Namespace, Keys extends readonly strin
 ): {
   t: TranslatorOf<N, Keys>;
 } {
-  const { locale, translations, loadNamespace } = useTranslationsContext();
+  const { translations, loadNamespace } = useTranslationsContext();
 
   const nsTranslations = translations[namespace];
 
   useEffect(() => {
     if (!nsTranslations) {
-      loadNamespace(namespace);
+      void loadNamespace(namespace);
     }
-  }, [namespace, locale, nsTranslations, loadNamespace]);
+  }, [namespace, nsTranslations, loadNamespace]);
 
   const t = useMemo(() => {
     if (!nsTranslations) {

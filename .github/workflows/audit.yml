@@ -28,7 +28,7 @@ jobs:
       - name: 🔍 Check for console statements and debugger
         run: |
           echo "🔎 Searching for console statements or debugger..."
-          if grep -E -r "(console\.\w+|debugger)" ./src; then
+          if grep -E -r --exclude-dir=log "(console\.\w+|debugger)" ./src; then
             echo "❌ Found console statements or debugger!"
             exit 1
           else

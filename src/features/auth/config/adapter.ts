@@ -1,45 +1,48 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import UserRepository from '@/features/user/repositories/user.repository';
+import { AuthRepository } from '@/features/auth/repositories/auth.repository';
 import { UpstashRedisAdapter } from '@next-auth/upstash-redis-adapter';
 import { Adapter, AdapterUser } from 'next-auth/adapters';
 
 function CustomRedisAdapter(db: Database): Adapter {
   const baseAdapter = UpstashRedisAdapter(db);
-  const userRepository = new UserRepository(db);
-
-  const getUser = async (id: string) => {
-    return await userRepository
-      .findById(id)
-      .then((user) => user as unknown as AdapterUser)
-      .catch(() => null);
-  };
+  const authRepository = new AuthRepository(db);
 
   return {
     ...baseAdapter,
-    async createUser(user: AdapterUser): Promise<PublicUser | null> {
-      const { emailVerified, ...data } = user;
-      return await userRepository.create(data as CreateUserDTO);
+    async createUser(user: AdapterUser) {
+      const { email, emailVerified, ...data } = user;
+      if (!email) return null;
+
+      const existingUser = await authRepository.findByEmail(email);
+      if (existingUser) return existingUser as unknown as AdapterUser;
+
+      return await authRepository.create({ email, ...data } as CreateUserDTO);
     },
-    getUser,
+    async getUser(id: string) {
+      return await authRepository
+        .findById(id)
+        .then((user) => user as unknown as AdapterUser)
+        .catch(() => null);
+    },
     async getUserByEmail(email: string) {
-      return await userRepository
+      return await authRepository
         .findByEmail(email)
         .then((user) => user as unknown as AdapterUser)
         .catch(() => null);
     },
     async getUserByAccount({ provider, providerAccountId }) {
-      return await userRepository
+      return await authRepository
         .findByAccount(provider, providerAccountId)
         .then((user) => user as unknown as AdapterUser)
         .catch(() => null);
     },
     async updateUser({ id, ...data }) {
-      return await userRepository
+      return await authRepository
         .update(id, data as UpdateUserDTO)
         .then((user) => user as unknown as AdapterUser);
     },
     async deleteUser(userId: string) {
-      await userRepository.deleteAccount(userId);
+      await authRepository.deleteAccount(userId);
     },
   };
 }

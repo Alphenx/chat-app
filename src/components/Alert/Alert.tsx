@@ -2,9 +2,9 @@ import CloseButton from '@/components/CloseButton/CloseButton';
 import { AlertRootProps, Box, Alert as ChakraAlert } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-export interface AlertProps extends AlertRootProps {
-  title?: string;
-  description?: string;
+export interface AlertProps extends Omit<AlertRootProps, 'title'> {
+  title?: ReactNode;
+  description?: ReactNode;
   icon?: ReactNode;
   hideIcon?: boolean;
   onClose?: () => void;

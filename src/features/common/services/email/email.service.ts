@@ -1,16 +1,19 @@
 import { render } from '@react-email/components';
-import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
+import { Transporter } from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { JSX } from 'react';
 import { EmailError } from './errors/email.error';
 
-interface MailOptions extends SendMailOptions {
+interface MailOptions extends SMTPTransport.Options {
   body: JSX.Element;
 }
+
+export type NodemailerCreateTransport = (options: SMTPTransport.Options) => Transporter;
 
 class EmailService {
   private transporter: Transporter;
 
-  constructor() {
+  constructor(createTransport: NodemailerCreateTransport) {
     const {
       EMAIL_SERVER_HOST: host,
       EMAIL_SERVER_PORT: port,
@@ -18,7 +21,7 @@ class EmailService {
       EMAIL_SERVER_PASSWORD: pass,
     } = process.env;
 
-    this.transporter = nodemailer.createTransport({
+    this.transporter = createTransport({
       host,
       port: Number(port),
       secure: port === '465',
@@ -30,7 +33,7 @@ class EmailService {
     try {
       const { body, ...mailOptions } = options;
       mailOptions.html = await render(body);
-      await this.transporter.sendMail(mailOptions);
+      await this.transporter.sendMail(mailOptions as SMTPTransport.Options);
     } catch (err) {
       throw EmailError.invalidTransport(err);
     }

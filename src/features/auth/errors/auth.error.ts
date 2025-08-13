@@ -1,34 +1,66 @@
-import translations from '@/features/auth/i18n';
-import { BaseError } from '@/features/common/errors/base.error';
+import BaseError from '@/features/common/errors/base.error';
 
-export class AuthError extends BaseError {
-  private static t = this.getTranslator(translations, 'auth', 'errors');
-
-  static defaultError(): AuthError {
-    return new AuthError(this.t('Something went wrong. Please try again.', 'defaultError'));
+export class AuthError extends BaseError<'auth'> {
+  static defaultError() {
+    return new this({
+      i18nKey: 'errors.defaultError',
+      message: 'Something went wrong. Please try again later.',
+      statusCode: 500,
+      namespace: 'auth',
+    });
   }
 
-  static userAlreadyExists(): AuthError {
-    return new AuthError(this.t('This account already exists.', 'userAlreadyExists'));
+  static userAlreadyExists() {
+    return new this({
+      i18nKey: 'errors.userAlreadyExists',
+      message: 'This account already exists.',
+      statusCode: 409,
+      namespace: 'auth',
+    });
   }
 
-  static userNotFound(): AuthError {
-    return new AuthError(this.t('No account found.', 'userNotFound'));
+  static userNotFound() {
+    return new this({
+      i18nKey: 'errors.userNotFound',
+      message: 'User not found.',
+      statusCode: 404,
+      namespace: 'auth',
+    });
   }
 
-  static invalidCredentials(): AuthError {
-    return new AuthError(this.t('Invalid credentials.', 'invalidCredentials'));
+  static invalidCredentials() {
+    return new this({
+      i18nKey: 'errors.invalidCredentials',
+      message: 'Invalid credentials.',
+      statusCode: 401,
+      namespace: 'auth',
+    });
   }
 
-  static unauthorized(): AuthError {
-    return new AuthError(this.t('Unauthorized access.', 'unauthorized'));
+  static unauthorized() {
+    return new this({
+      i18nKey: 'errors.unauthorized',
+      message: 'Unauthorized access.',
+      statusCode: 401,
+      namespace: 'auth',
+    });
   }
 
-  static emailNotValidated(): AuthError {
-    return new AuthError(this.t('Email not validated.', 'emailNotValidated'));
+  static emailNotValidated() {
+    return new this({
+      i18nKey: 'errors.emailNotValidated',
+      message: 'Email not validated.',
+      statusCode: 400,
+      namespace: 'auth',
+    });
   }
 
-  static invalidToken(): AuthError {
-    return new AuthError(this.t('Invalid or expired token.', 'invalidToken'));
+  static invalidToken() {
+    return new this({
+      i18nKey: 'errors.invalidToken',
+      message: 'Invalid or expired token.',
+      statusCode: 401,
+      namespace: 'auth',
+    });
   }
 }

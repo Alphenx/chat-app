@@ -10,8 +10,12 @@ interface LogoProps extends BoxProps {
 type ResponsiveValue<T> = { [breakpoint: string]: T };
 
 export default function Logo({ showName = false, ...boxProps }: LogoProps) {
-  const currentHeight = useBreakpointValue(boxProps.height as ResponsiveValue<string>);
-  const size = currentHeight ? parseInt(currentHeight) : 150;
+  const defaultSize = 150;
+  const responsiveHeight = useBreakpointValue(
+    (boxProps.height ?? boxProps.boxSize ?? defaultSize) as ResponsiveValue<string | number>
+  );
+
+  const size = responsiveHeight ? parseInt(responsiveHeight.toString()) : defaultSize;
   const appNameAspectRatio = 4;
   const appNameHeight = size / appNameAspectRatio;
   const logoSize = size * 0.4;
@@ -27,7 +31,7 @@ export default function Logo({ showName = false, ...boxProps }: LogoProps) {
     >
       <Box width={`${logoSize}px`} height={`${logoSize}px`}>
         <NextImage
-          src='/logo.svg'
+          src='/assets/logo.svg'
           alt='Logo'
           width={logoSize}
           height={logoSize}
@@ -38,7 +42,7 @@ export default function Logo({ showName = false, ...boxProps }: LogoProps) {
       {showName && (
         <Box width={`${size}px`} height={`${appNameHeight}px`}>
           <NextImage
-            src='/app-name.svg'
+            src='/assets/app-name.svg'
             alt='App Name'
             width={size}
             height={appNameHeight}

@@ -1,15 +1,21 @@
-import { BaseError } from '@/features/common/errors/base.error';
-import translations from '@/features/common/services/email/i18n';
+import BaseError from '@/features/common/errors/base.error';
 
-export class EmailError extends BaseError {
-  private static t = this.getTranslator(translations, 'email', 'errors');
-
-  static invalidTransport(error: unknown): EmailError {
-    let message = this.t('An error occurred while processing the request', 'defaultError');
-
+export class EmailError extends BaseError<'email'> {
+  static invalidTransport(error: unknown) {
     if (error instanceof Error) {
-      message = message + `: ${error.message}`;
+      return new this({
+        message: error.message,
+        i18nKey: 'errors.defaultError',
+        statusCode: 500,
+        namespace: 'email',
+      });
     }
-    return new EmailError(message);
+
+    return new this({
+      message: 'An error occurred while processing the request',
+      i18nKey: 'errors.defaultError',
+      statusCode: 500,
+      namespace: 'email',
+    });
   }
 }
