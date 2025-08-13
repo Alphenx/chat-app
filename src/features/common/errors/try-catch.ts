@@ -27,7 +27,7 @@ export function tryCatch<T, E = Error>(
 
 const DEFAULT_ERROR: BaseErrorProps<'common'> = {
   namespace: 'common',
-  i18nKey: 'globalError.message',
+  i18nKey: 'defaultError',
   message: 'Something went wrong. Please try again later.',
   statusCode: 500,
 };
