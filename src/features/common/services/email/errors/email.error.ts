@@ -1,12 +1,21 @@
 import BaseError from '@/features/common/errors/base.error';
 
-export class EmailError extends BaseError {
-  private static throw = this.getTranslator('email', 'errors');
-
+export class EmailError extends BaseError<'email'> {
   static invalidTransport(error: unknown) {
     if (error instanceof Error) {
-      return this.throw(error.message, 'defaultError');
+      return new this({
+        message: error.message,
+        i18nKey: 'errors.defaultError',
+        statusCode: 500,
+        namespace: 'email',
+      });
     }
-    return this.throw('An error occurred while processing the request', 'defaultError');
+
+    return new this({
+      message: 'An error occurred while processing the request',
+      i18nKey: 'errors.defaultError',
+      statusCode: 500,
+      namespace: 'email',
+    });
   }
 }

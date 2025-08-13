@@ -1,5 +1,6 @@
 const en = {
   common: {
+    defaultError: 'An unexpected error occurred. Please try again later.',
     globalError: {
       title: 'Something went wrong',
       message: 'An unexpected error occurred. Please try again later.',

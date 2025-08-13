@@ -3,7 +3,7 @@
 import { Feedback } from '@/features/auth/components/common/FormFeedback';
 import { AuthError } from '@/features/auth/errors/auth.error';
 import { AppRoute } from '@/features/common/constants/routes';
-import { tryCatch } from '@/features/common/utils/errors/try-catch';
+import { tryCatch } from '@/features/common/errors/try-catch';
 import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { signIn, SignInResponse } from 'next-auth/react';
 import { redirect } from 'next/navigation';

@@ -1,11 +1,11 @@
 const es = {
   account: {
     errors: {
-      defaultError: 'Algo salió mal. Por favor, inténtalo de nuevo más tarde.',
-      userAlreadyExists: 'Esta cuenta ya existe.',
-      userNotFound: 'Usuario no encontrado.',
-      alreadyFriend: 'Este usuario ya es un amigo.',
-      requestAlreadySent: 'Solicitud de amistad ya enviada.',
+      defaultError: 'Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.',
+      userAlreadyExists: 'Ya existe una cuenta registrada con estos datos.',
+      userNotFound: 'No se ha podido encontrar al usuario.',
+      alreadyFriend: 'Este usuario ya forma parte de tu lista de amigos.',
+      requestAlreadySent: 'Ya has enviado una solicitud de amistad a este usuario.',
     },
   },
 } as const;

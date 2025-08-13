@@ -38,17 +38,22 @@ export default function RegisterForm() {
 
   async function onSubmit(values: RegisterFormValues) {
     const { name, email, password } = values;
-    try {
-      await register({ name, email, password });
-      resetForm();
+    const [, error] = await register({ name, email, password });
 
-      setFeedback({
-        message: t('Check your email to verify your account.', 'feedback.emailVerification'),
-        status: 'success',
-      });
-    } catch (error) {
-      setFeedback({ message: (error as Error).message, status: 'error' });
+    if (error) {
+      setFeedback({ message: error.message, status: 'error' });
+      return;
     }
+
+    setFeedback({
+      message: t(
+        'Registration successful! Please check your email to verify your account.',
+        'feedback.emailVerification'
+      ),
+      status: 'success',
+    });
+
+    resetForm();
   }
 
   return (
