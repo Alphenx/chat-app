@@ -7,6 +7,7 @@ export class EmailError extends BaseError<'email'> {
         message: error.message,
         i18nKey: 'errors.defaultError',
         statusCode: 500,
+        namespace: 'email',
       });
     }
 
@@ -14,6 +15,7 @@ export class EmailError extends BaseError<'email'> {
       message: 'An error occurred while processing the request',
       i18nKey: 'errors.defaultError',
       statusCode: 500,
+      namespace: 'email',
     });
   }
 }

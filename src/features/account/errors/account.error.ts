@@ -6,6 +6,7 @@ class AccountError extends BaseError<'account'> {
       message: 'Something went wrong. Please try again.',
       i18nKey: 'errors.defaultError',
       statusCode: 500,
+      namespace: 'account',
     });
   }
 
@@ -14,6 +15,7 @@ class AccountError extends BaseError<'account'> {
       message: 'User already exists.',
       i18nKey: 'errors.userAlreadyExists',
       statusCode: 409,
+      namespace: 'account',
     });
   }
 
@@ -22,6 +24,7 @@ class AccountError extends BaseError<'account'> {
       message: 'User not found.',
       i18nKey: 'errors.userNotFound',
       statusCode: 404,
+      namespace: 'account',
     });
   }
 
@@ -30,6 +33,7 @@ class AccountError extends BaseError<'account'> {
       message: 'This user is already a friend.',
       i18nKey: 'errors.alreadyFriend',
       statusCode: 409,
+      namespace: 'account',
     });
   }
 
@@ -38,6 +42,7 @@ class AccountError extends BaseError<'account'> {
       message: 'Friend request already sent.',
       i18nKey: 'errors.requestAlreadySent',
       statusCode: 409,
+      namespace: 'account',
     });
   }
 }
