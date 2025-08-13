@@ -23,7 +23,7 @@ interface LoginFormValues {
 }
 
 export default function LoginForm({ token }: { token?: string }) {
-  const { t } = useTranslations('auth');
+  const { t } = useTranslations('auth', 'login');
   const { handleSignInResult, feedback, setFeedback } = useLogin(token);
   const { email, isRemembered, toggleRemember, handleRemember } = useRememberEmail();
 
@@ -52,13 +52,13 @@ export default function LoginForm({ token }: { token?: string }) {
 
   return (
     <FormContainer>
-      <FormTitle>{t('Sign Up', 'login.form.title')}</FormTitle>
+      <FormTitle>{t('Sign Up', 'form.title')}</FormTitle>
 
       <FormFeedback feedback={feedback} onClose={() => setFeedback(null)} />
 
       {/* EMAIL */}
       <Field
-        label={t('Email', 'login.form.fields.email.label')}
+        label={t('Email', 'form.fields.email.label')}
         errorText={errors.email}
         invalid={!!errors.email}
       >
@@ -66,14 +66,14 @@ export default function LoginForm({ token }: { token?: string }) {
           name='email'
           value={values.email}
           onChange={handleChange}
-          placeholder={extractText(t('you@example.com', 'login.form.fields.email.placeholder'))}
+          placeholder={extractText(t('you@example.com', 'form.fields.email.placeholder'))}
           autoComplete='email'
         />
       </Field>
 
       {/* PASSWORD */}
       <Field
-        label={t('Password', 'login.form.fields.password.label')}
+        label={t('Password', 'form.fields.password.label')}
         errorText={errors.password}
         invalid={!!errors.password}
       >
@@ -88,19 +88,19 @@ export default function LoginForm({ token }: { token?: string }) {
 
       <HStack w='full' justifyContent='space-between' mt='1'>
         <Checkbox checked={isRemembered} onCheckedChange={toggleRemember} size='sm' fontSize='xs'>
-          {t('Remember me', 'login.rememberMeLabel')}
+          {t('Remember me', 'rememberMeLabel')}
         </Checkbox>
         <Link color='blue.500' href='/forgot-password' fontSize='sm'>
-          {t('Forgot your password?', 'login.linkToForgotPassword')}
+          {t('Forgot your password?', 'linkToForgotPassword')}
         </Link>
       </HStack>
 
       <Button w='full' onClick={handleSubmit} loading={loading} fontWeight='bold' mt='5'>
-        {t('Sign In', 'login.form.submit')}
+        {t('Sign In', 'form.submit')}
       </Button>
 
       <Link color='blue.500' href='/register' fontSize='sm'>
-        {t("Don't have an account? Sign up", 'login.linkToRegister')}
+        {t("Don't have an account? Sign up", 'linkToRegister')}
       </Link>
 
       <FormAlternativeMethods />
