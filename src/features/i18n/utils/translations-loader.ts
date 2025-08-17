@@ -1,8 +1,11 @@
 import { NAMESPACES } from '@/features/i18n/config';
 import I18nError from '@/features/i18n/errors/i18n.error';
 
-const DEFAULT_LOADER = async (namespace: Namespace, locale: Locale) => {
-  return safeImport(
+function DEFAULT_LOADER<N extends Namespace>(
+  namespace: N,
+  locale: Locale
+): Promise<TranslationsOf<N, Locale>> {
+  return safeImport<TranslationsOf<N, Locale>>(
     () =>
       import(
         /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
@@ -11,11 +14,11 @@ const DEFAULT_LOADER = async (namespace: Namespace, locale: Locale) => {
       ),
     { namespace, locale }
   );
-};
+}
 
 const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
-  verificationEmail: async (locale: Locale) =>
-    safeImport(
+  verificationEmail: (locale: Locale): ReturnType<Loader> =>
+    safeImport<TranslationsOf<'verificationEmail', Locale>>(
       () =>
         import(
           /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
@@ -24,8 +27,8 @@ const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
         ),
       { namespace: 'verificationEmail', locale }
     ),
-  resetPasswordEmail: async (locale: Locale) =>
-    safeImport(
+  resetPasswordEmail: (locale: Locale): ReturnType<Loader> =>
+    safeImport<TranslationsOf<'resetPasswordEmail', Locale>>(
       () =>
         import(
           /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
@@ -34,8 +37,8 @@ const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
         ),
       { namespace: 'resetPasswordEmail', locale }
     ),
-  email: async (locale: Locale) =>
-    safeImport(
+  email: (locale: Locale): ReturnType<Loader> =>
+    safeImport<TranslationsOf<'email', Locale>>(
       () =>
         import(
           /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
