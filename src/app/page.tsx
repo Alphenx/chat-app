@@ -1,4 +1,4 @@
-import { getSession } from '@/features/auth/actions/auth.actions';
+import { getSession } from '@/features/auth/utils/get-session';
 import { redirect } from 'next/navigation';
 
 async function RootPage() {
