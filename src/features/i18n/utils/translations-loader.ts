@@ -1,43 +1,49 @@
 import { NAMESPACES } from '@/features/i18n/config';
+import I18nError from '@/features/i18n/errors/i18n.error';
 
 const DEFAULT_LOADER = async (namespace: Namespace, locale: Locale) => {
-  return (
-    await import(
-      /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
-      /* webpackChunkName: "i18n-[request]" */
-      `@/features/${namespace}/i18n/${locale}`
-    )
-  ).default;
+  return safeImport(
+    () =>
+      import(
+        /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
+        /* webpackChunkName: "i18n-[request]" */
+        `@/features/${namespace}/i18n/${locale}`
+      ),
+    { namespace, locale }
+  );
 };
 
 const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
-  verificationEmail: async (locale: Locale) => {
-    return (
-      await import(
-        /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
-        /* webpackChunkName: "i18n-[request]" */
-        `@/features/common/services/email/templates/verification/i18n/${locale}`
-      )
-    ).default;
-  },
-  resetPasswordEmail: async (locale: Locale) => {
-    return (
-      await import(
-        /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
-        /* webpackChunkName: "i18n-[request]" */
-        `@/features/common/services/email/templates/reset-password/i18n/${locale}`
-      )
-    ).default;
-  },
-  email: async (locale: Locale) => {
-    return (
-      await import(
-        /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
-        /* webpackChunkName: "i18n-[request]" */
-        `@/features/common/services/email/i18n/${locale}`
-      )
-    ).default;
-  },
+  verificationEmail: async (locale: Locale) =>
+    safeImport(
+      () =>
+        import(
+          /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
+          /* webpackChunkName: "i18n-[request]" */
+          `@/features/common/services/email/templates/verification/i18n/${locale}`
+        ),
+      { namespace: 'verificationEmail', locale }
+    ),
+  resetPasswordEmail: async (locale: Locale) =>
+    safeImport(
+      () =>
+        import(
+          /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
+          /* webpackChunkName: "i18n-[request]" */
+          `@/features/common/services/email/templates/reset-password/i18n/${locale}`
+        ),
+      { namespace: 'resetPasswordEmail', locale }
+    ),
+  email: async (locale: Locale) =>
+    safeImport(
+      () =>
+        import(
+          /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
+          /* webpackChunkName: "i18n-[request]" */
+          `@/features/common/services/email/i18n/${locale}`
+        ),
+      { namespace: 'email', locale }
+    ),
 };
 
 export const translationsLoader = NAMESPACES.reduce(
@@ -47,3 +53,14 @@ export const translationsLoader = NAMESPACES.reduce(
   },
   {} as Record<Namespace, Loader>
 );
+
+async function safeImport<T>(
+  importer: () => Promise<{ default: T }>,
+  params: { namespace: Namespace; locale: Locale }
+): Promise<T> {
+  try {
+    return (await importer()).default;
+  } catch {
+    throw I18nError.moduleNotFound(params);
+  }
+}
