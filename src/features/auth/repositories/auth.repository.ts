@@ -32,8 +32,7 @@ export class AuthRepository extends AccountRepository<PrivateUser> {
     const encryptedToken = await encryptToken(id, email, expiration);
 
     if (!encryptedToken) return null;
-
-    return (await this.setValue(keyFn(id), encryptedToken, expiration)) ? encryptedToken : null;
+    return (await this.setValue(keyFn(id), encryptedToken, ttl)) ? encryptedToken : null;
   }
 
   async generateVerificationToken(id: UserId, email: string): Promise<string | null> {

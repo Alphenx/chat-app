@@ -1,4 +1,4 @@
-import { getSession } from '@/features/auth/actions/auth.actions';
+import { getSession } from '@/features/auth/utils/get-session';
 import { detectLocaleServer } from '@/features/i18n/utils/detect-locale-server';
 import Providers from '@/providers/providers';
 import type { Metadata } from 'next';

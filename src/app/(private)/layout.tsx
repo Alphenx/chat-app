@@ -1,5 +1,5 @@
 import AppContainer from '@/components/layout/AppContainer';
-import { getSession } from '@/features/auth/actions/auth.actions';
+import { getSession } from '@/features/auth/utils/get-session';
 import { AppRoute } from '@/features/common/constants/routes';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
