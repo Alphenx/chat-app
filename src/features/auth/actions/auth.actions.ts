@@ -1,24 +1,14 @@
 'use server';
 
-import { authOptions } from '@/features/auth/config';
 import { AuthError } from '@/features/auth/errors/auth.error';
 import AuthRepository from '@/features/auth/repositories/auth.repository';
 import AuthService from '@/features/auth/services/auth.service';
 import { tryCatch } from '@/features/common/errors/try-catch';
 import { EmailService } from '@/features/common/services/email';
 import { db } from '@/lib/db/connection';
-import { getServerSession } from 'next-auth';
-import nodemailer from 'nodemailer';
 
 // AUTH SERVER ACTIONS
-const authService = new AuthService(
-  new AuthRepository(db),
-  new EmailService(nodemailer.createTransport)
-);
-
-export async function getSession() {
-  return await getServerSession(authOptions);
-}
+const authService = new AuthService(new AuthRepository(db), EmailService.getInstance());
 
 export async function register(credentials: CreateUserDTO): ResultAsync<PublicUser, AuthError> {
   return await tryCatch(authService.register(credentials));
@@ -33,7 +23,7 @@ export async function loginWithToken(token: string): ResultAsync<PublicUser, Aut
 }
 
 export async function validateEmail(token: string): ResultAsync<void, AuthError> {
-  return await tryCatch(authService.validateAccountById(token));
+  return await tryCatch(authService.validateEmailWithToken(token));
 }
 
 export async function resetPassword(
