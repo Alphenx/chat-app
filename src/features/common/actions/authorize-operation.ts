@@ -1,6 +1,5 @@
 'use server';
 
-import { getSession } from '@/features/auth/actions/auth.actions';
 import { AuthError } from '@/features/auth/errors/auth.error';
 import { getSession } from '@/features/auth/utils/get-session';
 
