@@ -1,4 +1,5 @@
-import { INITIAL_NAMESPACES } from '@/features/i18n/config';
+import { tryCatch } from '@/features/common/errors/try-catch';
+import { FALLBACK_LOCALE, INITIAL_NAMESPACES } from '@/features/i18n/config';
 import { translationsLoader } from '@/features/i18n/utils/translations-loader';
 import {
   createContext,
@@ -47,41 +48,68 @@ export function TranslationsProvider({
   const [translations, setTranslations] = useState<TranslationStore>(initialTranslations);
   const loadingNamespaces = useRef<Set<string>>(new Set());
 
-  const loadNamespace = useCallback(
-    async <N extends Namespace>(namespace: N) => {
-      const cacheKey = `${locale}:${namespace}`;
+  const localeRef = useRef<Locale>(initialLocale);
+  const translationsRef = useRef<TranslationStore>(initialTranslations);
 
-      if (translations[namespace] || loadingNamespaces.current.has(cacheKey)) return;
+  useEffect(() => {
+    localeRef.current = locale;
+  }, [locale]);
+
+  useEffect(() => {
+    translationsRef.current = translations;
+  }, [translations]);
+
+  const loadNamespaceInternal = useCallback(
+    async <N extends Namespace>(namespace: N, targetLocale?: Locale) => {
+      const effectiveLocale = targetLocale ?? localeRef.current;
+      const cacheKey = `${effectiveLocale}:${namespace}`;
+
+      if (translationsRef.current[namespace] || loadingNamespaces.current.has(cacheKey)) return;
       loadingNamespaces.current.add(cacheKey);
 
       try {
-        const loadedTranslations = await translationsLoader[namespace](locale);
-        if (loadedTranslations) {
-          setTranslations((prev) => ({ ...prev, [namespace]: loadedTranslations }));
+        const [loaded] = await tryCatch(translationsLoader[namespace](effectiveLocale));
+        if (loaded) {
+          setTranslations((prev) => {
+            if (prev[namespace] === loaded) return prev;
+            return { ...prev, [namespace]: loaded };
+          });
+          return;
         }
-      } catch (err) {
-        throw new Error(`Translations for "${cacheKey}" could not be loaded.`, { cause: err });
+
+        const [fallbackLoaded] = await tryCatch(translationsLoader[namespace](FALLBACK_LOCALE));
+        if (fallbackLoaded) {
+          setTranslations((prev) => {
+            if (prev[namespace] === fallbackLoaded) return prev;
+            return { ...prev, [namespace]: fallbackLoaded };
+          });
+        }
       } finally {
         loadingNamespaces.current.delete(cacheKey);
       }
     },
-    [locale, translations]
+    []
+  );
+
+  const loadNamespace = useCallback(
+    async <N extends Namespace>(namespace: N) => loadNamespaceInternal(namespace),
+    [loadNamespaceInternal]
   );
 
   const changeLocale = useCallback(
     async (newLocale: Locale) => {
-      const loadedNamespaces = Object.keys(translations) as Namespace[];
+      const loadedNamespaces = Object.keys(translationsRef.current) as Namespace[];
+      localeRef.current = newLocale;
       setLocale(newLocale);
-      await Promise.all(loadedNamespaces.map((ns) => loadNamespace(ns)));
+      await Promise.all(loadedNamespaces.map((ns) => loadNamespaceInternal(ns, newLocale)));
     },
-    [translations, loadNamespace]
+    [loadNamespaceInternal]
   );
 
   useEffect(() => {
-    initialNamespaces.forEach((namespace) => {
-      void loadNamespace(namespace);
-    });
-  }, [initialNamespaces, loadNamespace]);
+    // Fire all loads concurrently for initial namespaces
+    void Promise.all(initialNamespaces.map((ns) => loadNamespaceInternal(ns)));
+  }, [initialNamespaces, loadNamespaceInternal]);
 
   const value = useMemo(
     () => ({
