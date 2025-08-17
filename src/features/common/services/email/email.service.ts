@@ -1,5 +1,5 @@
 import { render } from '@react-email/components';
-import { Transporter } from 'nodemailer';
+import nodemailer, { Transporter } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { JSX } from 'react';
 import { EmailError } from './errors/email.error';
@@ -8,12 +8,11 @@ interface MailOptions extends SMTPTransport.Options {
   body: JSX.Element;
 }
 
-export type NodemailerCreateTransport = (options: SMTPTransport.Options) => Transporter;
-
 class EmailService {
+  private static instance: EmailService;
   private transporter: Transporter;
 
-  constructor(createTransport: NodemailerCreateTransport) {
+  private constructor() {
     const {
       EMAIL_SERVER_HOST: host,
       EMAIL_SERVER_PORT: port,
@@ -21,12 +20,19 @@ class EmailService {
       EMAIL_SERVER_PASSWORD: pass,
     } = process.env;
 
-    this.transporter = createTransport({
+    this.transporter = nodemailer.createTransport({
       host,
       port: Number(port),
       secure: port === '465',
       auth: { user, pass },
     });
+  }
+
+  static getInstance(): EmailService {
+    if (!EmailService.instance) {
+      EmailService.instance = new EmailService();
+    }
+    return EmailService.instance;
   }
 
   async sendMail(options: MailOptions): Promise<void> {
