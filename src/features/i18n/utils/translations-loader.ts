@@ -16,9 +16,11 @@ function DEFAULT_LOADER<N extends Namespace>(
   );
 }
 
+type TOf<N extends Namespace> = TranslationsOf<N, Locale>;
+
 const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
-  verificationEmail: (locale: Locale): ReturnType<Loader> =>
-    safeImport<TranslationsOf<'verificationEmail', Locale>>(
+  verificationEmail: (locale: Locale) =>
+    safeImport<TOf<'verificationEmail'>>(
       () =>
         import(
           /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
@@ -27,8 +29,8 @@ const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
         ),
       { namespace: 'verificationEmail', locale }
     ),
-  resetPasswordEmail: (locale: Locale): ReturnType<Loader> =>
-    safeImport<TranslationsOf<'resetPasswordEmail', Locale>>(
+  resetPasswordEmail: (locale: Locale) =>
+    safeImport<TOf<'resetPasswordEmail'>>(
       () =>
         import(
           /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
@@ -37,8 +39,8 @@ const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
         ),
       { namespace: 'resetPasswordEmail', locale }
     ),
-  email: (locale: Locale): ReturnType<Loader> =>
-    safeImport<TranslationsOf<'email', Locale>>(
+  email: (locale: Locale) =>
+    safeImport<TOf<'email'>>(
       () =>
         import(
           /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
@@ -51,7 +53,8 @@ const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
 
 export const translationsLoader = NAMESPACES.reduce(
   (acc, ns) => {
-    acc[ns] = CUSTOM_LOADERS[ns] ?? ((locale: Locale) => DEFAULT_LOADER(ns, locale));
+    const fallback: Loader = (locale) => DEFAULT_LOADER(ns, locale);
+    acc[ns] = CUSTOM_LOADERS[ns] ?? fallback;
     return acc;
   },
   {} as Record<Namespace, Loader>
