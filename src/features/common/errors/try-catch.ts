@@ -35,14 +35,12 @@ const DEFAULT_ERROR: BaseErrorProps<'common'> = {
 export async function wrapError<E = Error>(error: unknown): Promise<E> {
   if (error instanceof BaseError) {
     const raw = error.toPlain();
-    log.error(`[${error.name}] ${error.message}`, raw);
 
     try {
       const { t } = await getTranslations(raw.namespace);
-      log.info(`[i18nError] Translating error ${raw.i18nKey} in namespace ${raw.namespace}`, {
-        message: t(raw.message, raw.i18nKey),
-      });
-      return { ...raw, message: t(raw.message, raw.i18nKey) } as E;
+      const translatedError = { ...raw, message: t(raw.message, raw.i18nKey) };
+      log.error(`[${error.name}] ${error.message}`, translatedError);
+      return translatedError as E;
     } catch (error) {
       log.error(`[i18nError] Failed to translate ${raw.i18nKey}`, { error });
       return raw as E;
