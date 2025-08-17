@@ -12,6 +12,9 @@ const en = {
       message: 'Sorry, the page you are looking for does not exist or has been moved.',
       button: 'Go to Home',
     },
+    i18n: {
+      moduleNotFound: "Translations module not found for '${namespace}' in locale '${locale}'.",
+    },
   },
 } as const;
 
