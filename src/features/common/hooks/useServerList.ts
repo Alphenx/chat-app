@@ -24,7 +24,7 @@ export interface UseServerListResult<T> {
   create: (item: T) => Promise<void>;
   update: (item: T) => Promise<void>;
   remove: (item: T) => Promise<void>;
-  runAction: (params: RunActionParams) => void;
+  runAction: (params: RunActionParams) => Promise<void>;
 }
 
 export function useServerList<T>(opts: UseServerListOptions<T>): UseServerListResult<T> {
@@ -50,10 +50,15 @@ export function useServerList<T>(opts: UseServerListOptions<T>): UseServerListRe
 
   // Ref to keep the latest items for rollback
   const itemsRef = useRef<T[]>(items);
+  const fetchAllRef = useRef(fetchAll);
 
   useEffect(() => {
     itemsRef.current = items;
   }, [items]);
+
+  useEffect(() => {
+    fetchAllRef.current = fetchAll;
+  }, [fetchAll]);
 
   // RUN ACTION - GENERIC
   const runAction = useCallback(
@@ -66,6 +71,7 @@ export function useServerList<T>(opts: UseServerListOptions<T>): UseServerListRe
       } catch (error) {
         setAllInLocal(prev); // Rollback
         if (onError) onError(error as Error);
+        throw error;
       }
     },
     [setAllInLocal]
@@ -93,14 +99,14 @@ export function useServerList<T>(opts: UseServerListOptions<T>): UseServerListRe
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchAll();
+      const data = await fetchAllRef.current();
       setAllInLocal(data);
     } catch (error) {
       setError((error as Error).message);
     } finally {
       setLoading(false);
     }
-  }, [fetchAll, setAllInLocal]);
+  }, [setAllInLocal]);
 
   // UPDATE
   const update = useCallback(
