@@ -14,6 +14,7 @@ export const NAMESPACES = [
   'email',
   'resetPasswordEmail',
   'verificationEmail',
+  'realtime',
 ] as const;
 
 export const INITIAL_NAMESPACES: Namespace[] = ['auth', 'common'] as const;
