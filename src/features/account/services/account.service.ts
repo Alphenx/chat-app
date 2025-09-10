@@ -1,6 +1,5 @@
 import AccountError from '@/features/account/errors/account.error';
 import AccountRepository from '@/features/account/repositories/account.repository';
-import { CatchAll } from '@/features/common/utils/decorators/catch';
 
 export class AccountService {
   constructor(private store: AccountRepository) {}
