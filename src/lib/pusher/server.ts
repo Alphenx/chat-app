@@ -1,3 +1,4 @@
+import { log } from '@/log/logger';
 import PusherServer from 'pusher';
 
 declare global {
@@ -10,6 +11,13 @@ export function getPusherServer() {
   const { PUSHER_ID, PUSHER_SECRET, NEXT_PUBLIC_PUSHER_KEY, NEXT_PUBLIC_PUSHER_CLUSTER = 'eu' } = process.env;
 
   if (!PUSHER_ID || !PUSHER_SECRET || !NEXT_PUBLIC_PUSHER_KEY) {
+    log.error('[PUSHER][server] Missing environment variables.', {
+      PUSHER_ID,
+      PUSHER_SECRET,
+      NEXT_PUBLIC_PUSHER_KEY,
+      NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+
     throw new Error('[PUSHER][server] Missing environment variables.');
   }
 
