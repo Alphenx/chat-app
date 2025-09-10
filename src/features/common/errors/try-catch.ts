@@ -5,6 +5,7 @@ import { log } from '@/log/logger';
 export function tryCatch<T, E = Error>(operation: Promise<T>): ResultAsync<T, E>;
 export function tryCatch<T, E = Error>(operation: () => Promise<T>): ResultAsync<T, E>;
 export function tryCatch<T, E = Error>(operation: () => T): ResultSync<T, E>;
+export function tryCatch<T, E = Error>(operation: T): ResultSync<T, E>;
 export function tryCatch<T, E = Error>(
   operation: Operation<T>
 ): ResultSync<T, E> | ResultAsync<T, E> {
@@ -32,7 +33,7 @@ const DEFAULT_ERROR: BaseErrorProps<'common'> = {
   statusCode: 500,
 };
 
-export async function wrapError<E = Error>(error: unknown): Promise<E> {
+export async function wrapError<E = BaseError>(error: unknown): Promise<E> {
   if (error instanceof BaseError) {
     const raw = error.toPlain();
 

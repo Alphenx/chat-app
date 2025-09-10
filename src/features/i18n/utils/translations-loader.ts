@@ -1,10 +1,8 @@
 import { NAMESPACES } from '@/features/i18n/config';
 import I18nError from '@/features/i18n/errors/i18n.error';
+import { log } from '@/log/logger';
 
-function DEFAULT_LOADER<N extends Namespace>(
-  namespace: N,
-  locale: Locale
-): Promise<TranslationsOf<N, Locale>> {
+function DEFAULT_LOADER<N extends Namespace>(namespace: N, locale: Locale): Promise<TranslationsOf<N, Locale>> {
   return safeImport<TranslationsOf<N, Locale>>(
     () =>
       import(
@@ -49,6 +47,16 @@ const CUSTOM_LOADERS: Partial<Record<Namespace, Loader>> = {
         ),
       { namespace: 'email', locale }
     ),
+  realtime: (locale: Locale) =>
+    safeImport<TOf<'realtime'>>(
+      () =>
+        import(
+          /* webpackInclude: /\/i18n\/[a-z]{2}\.ts$/ */
+          /* webpackChunkName: "i18n-[request]" */
+          `@/features/common/services/realtime/i18n/${locale}`
+        ),
+      { namespace: 'realtime', locale }
+    ),
 };
 
 export const translationsLoader = NAMESPACES.reduce(
@@ -66,7 +74,8 @@ async function safeImport<T>(
 ): Promise<T> {
   try {
     return (await importer()).default;
-  } catch {
+  } catch (error) {
+    log.error(`Error loading translations for ${params.namespace} (${params.locale}):`, error);
     throw I18nError.moduleNotFound(params);
   }
 }
