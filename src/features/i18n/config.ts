@@ -14,6 +14,7 @@ export const NAMESPACES = [
   'email',
   'resetPasswordEmail',
   'verificationEmail',
+  'friends',
   'realtime',
 ] as const;
 

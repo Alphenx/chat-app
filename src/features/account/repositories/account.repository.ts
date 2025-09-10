@@ -66,6 +66,20 @@ export class AccountRepository<
     return { ...publicUser, friends, friendRequests };
   }
 
+  async findAccountPublicData(id: UserId): Promise<PublicUser | null> {
+    const user = await this.get(this.key.user(id));
+    if (!user) return null;
+    return this.toPublicUser(user);
+  }
+
+  async findAccountsPublicData(ids: UserId[]): Promise<PublicUser[]> {
+    const users = await this.getMany(ids, (id) => this.key.user(id));
+    return users.reduce<PublicUser[]>((acc, user) => {
+      if (user) acc.push(this.toPublicUser(user));
+      return acc;
+    }, []);
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const id = await this.getValue<UserId>(this.key.email(email));
     if (!id) return null;
