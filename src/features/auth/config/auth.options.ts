@@ -18,19 +18,23 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
-        token.picture = user.image;
+        Object.assign(token, {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          picture: user.image,
+        });
       }
       return token;
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id;
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.image = token.picture;
+      if (token && session.user) {
+        Object.assign(session.user, {
+          id: token.id,
+          name: token.name,
+          email: token.email,
+          image: token.picture,
+        });
       }
       return session;
     },

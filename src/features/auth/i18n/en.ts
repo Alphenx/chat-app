@@ -1,4 +1,4 @@
-export const en = {
+const en = {
   auth: {
     login: {
       form: {
@@ -111,7 +111,7 @@ export const en = {
       },
     },
     errors: {
-      defaultError: 'An error occurred. Please try again later.',
+      defaultError: 'Something went wrong. Please try again later.',
       invalidCredentials: 'Incorrect email or password.',
       userAlreadyExists: 'An account with this email already exists.',
       userNotFound: 'No account found with this email.',
@@ -127,3 +127,5 @@ export const en = {
     },
   },
 } as const;
+
+export default en;

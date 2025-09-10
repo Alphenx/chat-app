@@ -1,18 +1,9 @@
+import { getSession } from '@/features/auth/utils/get-session';
+import { detectLocaleServer } from '@/features/i18n/utils/detect-locale-server';
 import Providers from '@/providers/providers';
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import { ReactNode } from 'react';
 import './globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
   title: 'Chat App',
@@ -24,11 +15,16 @@ type Props = {
   children: ReactNode;
 };
 
-export default function RootLayout({ children }: Readonly<Props>) {
+export default async function RootLayout({ children }: Readonly<Props>) {
+  const locale = await detectLocaleServer();
+  const session = await getSession();
+
   return (
-    <html lang='en' suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Providers>{children}</Providers>
+    <html lang={locale}>
+      <body>
+        <Providers session={session} locale={locale}>
+          {children}
+        </Providers>
       </body>
     </html>
   );

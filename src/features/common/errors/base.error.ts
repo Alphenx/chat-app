@@ -1,17 +1,34 @@
-import { getServerTranslations } from '@/features/common/actions/get-server-translations';
+export interface BaseErrorProps<N extends Namespace> {
+  message: string;
+  statusCode: number;
+  i18nKey: TranslationKeysOf<N>;
+  namespace: N;
+}
 
-export class BaseError extends Error {
-  constructor(message: string) {
+class BaseError<N extends Namespace = 'common'> extends Error {
+  public readonly statusCode: number;
+  public readonly i18nKey: TranslationKeysOf<N>;
+  public readonly namespace: N;
+
+  constructor({ message, i18nKey, namespace, statusCode = 500 }: BaseErrorProps<N>) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);
+    this.name = new.target.name;
+    this.statusCode = statusCode;
+    this.i18nKey = i18nKey;
+    this.namespace = namespace;
+
+    if (Error.captureStackTrace) Error.captureStackTrace(this, this.constructor);
   }
 
-  protected static getTranslator<
-    T extends LocaleTranslations<TranslationObject>,
-    Keys extends string[],
-  >(translations: LocaleTranslations<T>, ...keys: Keys) {
-    const locale = 'en'; // TODO: get locale from request
-    const { t } = getServerTranslations<T, Keys>(translations, locale, ...keys);
-    return t;
+  public toPlain(): BaseErrorProps<N> {
+    return {
+      message: this.message,
+      statusCode: this.statusCode,
+      i18nKey: this.i18nKey,
+      namespace: this.namespace,
+    };
   }
 }
+
+export default BaseError;

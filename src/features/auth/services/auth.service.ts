@@ -1,14 +1,15 @@
 import { AuthError } from '@/features/auth/errors/auth.error';
 import AuthRepository from '@/features/auth/repositories/auth.repository';
 import { hashPassword } from '@/features/auth/utils/encryption';
-import EmailService from '@/features/common/services/email/email.service';
+import type EmailService from '@/features/common/services/email/email.service';
 import ResetPasswordEmail from '@/features/common/services/email/templates/reset-password/reset-password';
 import VerificationEmail from '@/features/common/services/email/templates/verification/email-verification';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
 
-class AuthService {
+export class AuthService {
   constructor(
     private store: AuthRepository,
-    private emailService: EmailService
+    private emailService?: EmailService
   ) {}
 
   async login(email: string, password: string): Promise<PublicUser> {
@@ -88,38 +89,47 @@ class AuthService {
     await this.store.removeVerificationToken(id);
   }
 
+  async validateEmailWithToken(token: string): Promise<void> {
+    const decodedToken = await this.store.getDecodedToken(token);
+    if (!decodedToken) throw AuthError.invalidToken();
+
+    await this.validateAccountById(decodedToken.id);
+  }
+
   async sendVerificationEmail(name: string, email: string, token: string): Promise<void> {
+    if (!this.emailService) throw AuthError.defaultError();
+
     const component = await VerificationEmail({
-      locale: 'en',
       verificationLink: `${process.env.NEXT_PUBLIC_VERCEL_URL}/login?token=${token}`,
       username: name,
     });
 
     await this.emailService.sendMail({
       body: component.body,
-      from: component.head.from,
-      subject: component.head.subject,
+      from: extractText(component.head.from),
+      subject: extractText(component.head.subject),
       to: email,
     });
   }
 
   async sendResetPasswordEmail(email: string): Promise<void> {
+    if (!this.emailService) throw AuthError.defaultError();
+
     const user = await this.store.findByEmail(email);
     if (!user) throw AuthError.userNotFound();
 
     const token = await this.store.generateResetToken(user.id, user.email);
     if (!token) throw AuthError.defaultError();
 
-    const component = ResetPasswordEmail({
-      locale: 'en',
+    const component = await ResetPasswordEmail({
       resetLink: `${process.env.NEXT_PUBLIC_VERCEL_URL}/forgot-password?token=${token}`,
       username: user.name,
     });
 
     await this.emailService.sendMail({
       body: component.body,
-      from: component.head.from,
-      subject: component.head.subject,
+      from: extractText(component.head.from),
+      subject: extractText(component.head.subject),
       to: email,
     });
   }

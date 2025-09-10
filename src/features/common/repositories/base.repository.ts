@@ -2,7 +2,7 @@ enum Response {
   OK = 'OK',
 }
 
-abstract class BaseRepository<T> {
+abstract class BaseRepository<T = Record<string, unknown>> {
   protected db: Database;
   protected key: Record<string, (id: string) => string> = {};
 
@@ -30,6 +30,23 @@ abstract class BaseRepository<T> {
     const data = await this.db.hgetall(key);
     if (!data || Object.keys(data).length === 0) return null;
     return data as T;
+  }
+
+  /** Retrieves multiple entries as a map */
+  protected async getMany(keys: string[], buildKey: (key: string) => string): Promise<T[]> {
+    if (keys.length === 0) return [];
+
+    const pipeline = this.db.pipeline();
+    for (const key of keys) pipeline.hgetall(buildKey(key));
+
+    const results = await pipeline.exec();
+
+    return results.reduce<T[]>((acc, entry) => {
+      if (entry && Object.keys(entry).length > 0) {
+        acc.push(entry as T);
+      }
+      return acc;
+    }, []);
   }
 
   /** Deletes an entry */
@@ -88,44 +105,65 @@ abstract class BaseRepository<T> {
 
   // SETS
   /** Adds a member to a set */
-  protected async addToSet(key: string, member: string): Promise<boolean> {
+  protected async addToSet<U>(key: string, member: U): Promise<boolean> {
     return (await this.db.sadd(key, member)) === 1;
   }
 
   /** Retrieves all members from a set */
-  protected async getSetMembers(key: string): Promise<string[]> {
-    return await this.db.smembers(key);
+  protected async getSetMembers<U = string>(key: string): Promise<U[]> {
+    const members = await this.db.smembers(key);
+    return members as U[];
   }
 
   /** Removes a member from a set */
-  protected async removeFromSet(key: string, member: string): Promise<boolean> {
+  protected async removeFromSet<U = string>(key: string, member: U): Promise<boolean> {
     return (await this.db.srem(key, member)) === 1;
   }
 
   /** Checks if a member exists in a set */
-  protected async isSetMember(key: string, member: string): Promise<boolean> {
+  protected async isSetMember<U = string>(key: string, member: U): Promise<boolean> {
     return (await this.db.sismember(key, member)) === 1;
   }
 
   // SORTED SETS
   /** Adds a member to a sorted set */
-  protected async addToSortedSet(key: string, member: string, score: number): Promise<boolean> {
+  protected async addToSortedSet<U = string>(key: string, member: U, score: number) {
     return (await this.db.zadd(key, { score, member })) === 1;
   }
 
   /** Retrieves all members from a sorted set */
-  protected async getSortedSetMembers(key: string): Promise<string[]> {
-    return await this.db.zrange(key, 0, -1);
+  protected async getSortedSetMembers<U = string>(key: string): Promise<U[]> {
+    const members = await this.db.zrange<string[]>(key, 0, -1);
+    return members as U[];
   }
 
   /** Removes a member from a sorted set */
-  protected async removeFromSortedSet(key: string, member: string): Promise<boolean> {
+  protected async removeFromSortedSet<U = string>(key: string, member: U): Promise<boolean> {
     return (await this.db.zrem(key, member)) === 1;
   }
 
   /** Checks if a member exists in a sorted set */
-  protected async isSortedSetMember(key: string, member: string): Promise<boolean> {
+  protected async isSortedSetMember<U = string>(key: string, member: U): Promise<boolean> {
     return (await this.db.zrank(key, member)) !== null;
+  }
+
+  /** Retrieves a range of members from a sorted set */
+  protected async getSortedSetRange<U = string>(
+    key: string,
+    start: number | `(${number}` | '-inf',
+    stop: number | `(${number}` | '+inf',
+    limit?: { offset: number; count: number },
+    rev = true
+  ): Promise<U[]> {
+    const isScoreRange = typeof start === 'string' || typeof stop === 'string';
+
+    const opts: Record<string, unknown> = {};
+    if (isScoreRange) opts.byScore = true;
+    if (rev) opts.rev = true;
+    if (limit) opts.limit = limit;
+
+    const members = await this.db.zrange<string[]>(key, start as number, stop as number, opts);
+    return members as U[];
   }
 }
 

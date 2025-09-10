@@ -3,15 +3,16 @@
 import { Field, Link } from '@/components';
 import { register } from '@/features/auth/actions/auth.actions';
 import {
+  Feedback,
   FormAlternativeMethods,
   FormContainer,
   FormFeedback,
   FormPasswordRequirements,
   FormTitle,
 } from '@/features/auth/components/common';
-import { Feedback } from '@/features/auth/components/common/FormFeedback';
-import translations from '@/features/auth/i18n';
-import { useForm, useTranslations } from '@/features/common/hooks';
+import { useForm } from '@/features/common/hooks';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
+import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Box, Button, Input } from '@chakra-ui/react';
 import { useState } from 'react';
 import { validateRegisterForm } from './validations';
@@ -24,7 +25,7 @@ export interface RegisterFormValues {
 }
 
 export default function RegisterForm() {
-  const { t } = useTranslations(translations, 'auth', 'register');
+  const { t } = useTranslations('auth', 'register');
   const [showRequirements, setShowRequirements] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
 
@@ -37,17 +38,22 @@ export default function RegisterForm() {
 
   async function onSubmit(values: RegisterFormValues) {
     const { name, email, password } = values;
-    try {
-      await register({ name, email, password });
-      resetForm();
+    const [, error] = await register({ name, email, password });
 
-      setFeedback({
-        message: t('Check your email to verify your account.', 'feedback.emailVerification'),
-        status: 'success',
-      });
-    } catch (error) {
-      setFeedback({ message: (error as Error).message, status: 'error' });
+    if (error) {
+      setFeedback({ message: error.message, status: 'error' });
+      return;
     }
+
+    setFeedback({
+      message: t(
+        'Registration successful! Please check your email to verify your account.',
+        'feedback.emailVerification'
+      ),
+      status: 'success',
+    });
+
+    resetForm();
   }
 
   return (
@@ -67,7 +73,7 @@ export default function RegisterForm() {
           name='name'
           value={values.name}
           onChange={handleChange}
-          placeholder={t('Your name', 'form.fields.name.placeholder')}
+          placeholder={extractText(t('Your name', 'form.fields.name.placeholder'))}
         />
       </Field>
 
@@ -82,7 +88,7 @@ export default function RegisterForm() {
           name='email'
           value={values.email}
           onChange={handleChange}
-          placeholder={t('you@example.com', 'form.fields.email.placeholder')}
+          placeholder={extractText(t('you@example.com', 'form.fields.email.placeholder'))}
         />
       </Field>
 

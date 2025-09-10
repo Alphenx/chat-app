@@ -4,8 +4,9 @@ import { Field, Link } from '@/components';
 import { sendResetPasswordEmail } from '@/features/auth/actions/auth.actions';
 import { FormContainer, FormFeedback, FormTitle } from '@/features/auth/components/common';
 import { Feedback } from '@/features/auth/components/common/FormFeedback';
-import translations from '@/features/auth/i18n';
-import { useForm, useTranslations } from '@/features/common/hooks';
+import { useForm } from '@/features/common/hooks';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
+import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Button, Input } from '@chakra-ui/react';
 import { useState } from 'react';
 
@@ -14,7 +15,7 @@ interface ForgotPasswordFormValues {
 }
 
 function ForgotPasswordForm() {
-  const { t } = useTranslations(translations, 'auth', 'forgotPassword', 'forgot');
+  const { t } = useTranslations('auth', 'forgotPassword', 'forgot');
   const [feedback, setFeedback] = useState<Feedback>(null);
 
   const { values, errors, loading, handleChange, handleSubmit } = useForm<ForgotPasswordFormValues>(
@@ -49,7 +50,7 @@ function ForgotPasswordForm() {
           name='email'
           value={values.email}
           onChange={handleChange}
-          placeholder={t('your.email@example.com', 'form.fields.email.placeholder')}
+          placeholder={extractText(t('your.email@example.com', 'form.fields.email.placeholder'))}
           autoComplete='email'
         />
       </Field>

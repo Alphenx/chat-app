@@ -7,22 +7,24 @@ import {
   FormFeedback,
   FormTitle,
 } from '@/features/auth/components/common';
-import { Feedback } from '@/features/auth/components/common/FormFeedback';
-import translations from '@/features/auth/i18n';
-import { useForm, useTranslations } from '@/features/common/hooks';
+import useLogin from '@/features/auth/hooks/useLogin';
+import useRememberEmail from '@/features/auth/hooks/useRememberEmail';
+import { AppRoute } from '@/features/common/constants/routes';
+import { useForm } from '@/features/common/hooks';
+import { extractText } from '@/features/common/utils/string/extract-text-from-node';
+import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Button, HStack, Input } from '@chakra-ui/react';
 import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { redirect } from 'next/navigation';
 
 interface LoginFormValues {
   email: string;
   password: string;
 }
 
-export default function LoginForm() {
-  const { t } = useTranslations(translations, 'auth', 'login');
-  const [feedback, setFeedback] = useQueryErrorFeedback();
+export default function LoginForm({ token }: { token?: string }) {
+  const { t } = useTranslations('auth', 'login');
+  const { handleSignInResult, feedback, setFeedback } = useLogin(token);
   const { email, isRemembered, toggleRemember, handleRemember } = useRememberEmail();
 
   const { values, errors, loading, handleChange, handleSubmit } = useForm<LoginFormValues>({
@@ -31,13 +33,21 @@ export default function LoginForm() {
   });
 
   async function onSubmit(values: LoginFormValues) {
-    handleRemember(values.email);
+    const { email, password } = values;
 
-    await signIn('credentials', {
-      email: values.email,
-      password: values.password,
-      callbackUrl: '/dashboard',
+    const result = await signIn('credentials', {
+      email,
+      password,
+      callbackUrl: AppRoute.DASHBOARD,
+      redirect: false,
     });
+
+    const success = await handleSignInResult(result);
+
+    if (success) {
+      handleRemember(email);
+      redirect(AppRoute.DASHBOARD);
+    }
   }
 
   return (
@@ -56,7 +66,7 @@ export default function LoginForm() {
           name='email'
           value={values.email}
           onChange={handleChange}
-          placeholder={t('you@example.com', 'form.fields.email.placeholder')}
+          placeholder={extractText(t('you@example.com', 'form.fields.email.placeholder'))}
           autoComplete='email'
         />
       </Field>
@@ -96,38 +106,4 @@ export default function LoginForm() {
       <FormAlternativeMethods />
     </FormContainer>
   );
-}
-
-function useRememberEmail() {
-  const email = localStorage.getItem('email') || '';
-  const [isRemembered, setIsRemembered] = useState<boolean>(!!email);
-
-  const toggleRemember = () => setIsRemembered((prev) => !prev);
-
-  const handleRemember = (emailToSave: string) => {
-    if (isRemembered && emailToSave) {
-      localStorage.setItem('email', emailToSave);
-    } else if (email) {
-      localStorage.removeItem('email');
-    }
-  };
-
-  return { email, isRemembered, toggleRemember, handleRemember };
-}
-
-function useQueryErrorFeedback(): [
-  Feedback | null,
-  React.Dispatch<React.SetStateAction<Feedback | null>>,
-] {
-  const searchParams = useSearchParams();
-  const [feedback, setFeedback] = useState<Feedback | null>(null);
-
-  useEffect(() => {
-    const queryError = searchParams.get('error');
-    if (queryError) {
-      setFeedback({ message: queryError, status: 'error' });
-    }
-  }, [searchParams]);
-
-  return [feedback, setFeedback];
 }
