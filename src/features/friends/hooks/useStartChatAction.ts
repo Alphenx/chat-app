@@ -3,7 +3,7 @@ import { AppRoute } from '@/features/common/constants/routes';
 import { redirect } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
-function useStartChatAction() {
+export function useStartChatAction() {
   const [loading, setLoading] = useState(false);
   const [chatIds, setChatIds] = useState<Record<string, string>>({});
 
