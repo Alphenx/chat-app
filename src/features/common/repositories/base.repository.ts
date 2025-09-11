@@ -131,6 +131,17 @@ abstract class BaseRepository<T = Record<string, unknown>> {
     return (await this.db.zadd(key, { score, member })) === 1;
   }
 
+  /* Updates a member in a sorted set */
+  protected async updateSortedSetMember<U = string>(
+    key: string,
+    member: U,
+    score: number
+  ): Promise<boolean> {
+    const removed = await this.removeFromSortedSet(key, member);
+    if (!removed) return false;
+    return await this.addToSortedSet(key, member, score);
+  }
+
   /** Retrieves all members from a sorted set */
   protected async getSortedSetMembers<U = string>(key: string): Promise<U[]> {
     const members = await this.db.zrange<string[]>(key, 0, -1);
@@ -150,20 +161,44 @@ abstract class BaseRepository<T = Record<string, unknown>> {
   /** Retrieves a range of members from a sorted set */
   protected async getSortedSetRange<U = string>(
     key: string,
-    start: number | `(${number}` | '-inf',
-    stop: number | `(${number}` | '+inf',
+    minScore: number | `(${number}` | '-inf',
+    maxScore: number | `(${number}` | '+inf',
     limit?: { offset: number; count: number },
     rev = true
-  ): Promise<U[]> {
-    const isScoreRange = typeof start === 'string' || typeof stop === 'string';
+  ): Promise<U> {
+    const opts: Record<string, unknown> = {
+      byScore: false,
+      rev,
+    };
 
-    const opts: Record<string, unknown> = {};
-    if (isScoreRange) opts.byScore = true;
-    if (rev) opts.rev = true;
-    if (limit) opts.limit = limit;
+    if (limit) {
+      opts.byScore = true;
+      opts.limit = limit;
+    }
 
-    const members = await this.db.zrange<string[]>(key, start as number, stop as number, opts);
-    return members as U[];
+    const members = await this.db.zrange<string[]>(
+      key,
+      minScore as number,
+      maxScore as number,
+      opts
+    );
+    return members as U;
+  }
+
+  protected async getSortedSetRangeByScore<U = string>(
+    key: string,
+    timestamp: number | '+inf' | `(${number}` = '+inf',
+    count = 15,
+    rev = true
+  ): Promise<U> {
+    const members = await this.db.zrange(key, timestamp, '-inf', {
+      byScore: true,
+      rev,
+      offset: 0,
+      count,
+    });
+
+    return members.toReversed() as U;
   }
 }
 
