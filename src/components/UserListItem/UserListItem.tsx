@@ -1,5 +1,5 @@
-import { ActionsDisplayer, Avatar } from '@/components';
-import { Action } from '@/components/ActionsDisplayer/ActionsDisplayer';
+import ActionsDisplayer, { Action } from '@/components/ActionsDisplayer/ActionsDisplayer';
+import Avatar from '@/components/Avatar/Avatar';
 import { HStack, Stack, Text } from '@chakra-ui/react';
 
 interface UserListItemProps {
