@@ -9,12 +9,38 @@ import { db } from '@/lib/db/connection';
 
 const service = new AccountService(new AccountRepository(db));
 
-export async function getUserByEmail(email: string): ResultAsync<PublicUser, AccountError> {
+export async function getAccountByEmail(email: string): ResultAsync<PublicUser, AccountError> {
   return await tryCatch(async () => {
     await authorizeOperation();
     return await service.getUserByEmail(email);
   });
 }
+
+export async function getAccountById(id: string): ResultAsync<PublicUser, AccountError> {
+  return await tryCatch(async () => {
+    await authorizeOperation();
+    return await service.getUserById(id);
+  });
+}
+
+export async function getAccountPublicData(
+  id: UserId
+): ResultAsync<PublicUser | null, AccountError> {
+  return await tryCatch(async () => {
+    await authorizeOperation();
+    return await service.findAccountPublicData(id);
+  });
+}
+
+export async function getAccountsPublicData(
+  ids: UserId[]
+): ResultAsync<PublicUser[], AccountError> {
+  return await tryCatch(async () => {
+    await authorizeOperation();
+    return await service.findAccountsPublicData(ids);
+  });
+}
+
 export async function getAccountData(): ResultAsync<PublicUser, AccountError> {
   return await tryCatch(async () => {
     const { user } = await authorizeOperation();
