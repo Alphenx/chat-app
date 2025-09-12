@@ -1,6 +1,5 @@
 import { AuthError } from '@/features/auth/errors/auth.error';
 import { getSession } from '@/features/auth/utils/get-session';
-import { getChatMetadataById } from '@/features/chat/actions/chat.actions';
 import BaseError from '@/features/common/errors/base.error';
 import { wrapError } from '@/features/common/errors/try-catch';
 import { Channels } from '@/features/common/services/realtime/connection/channels';
@@ -42,14 +41,6 @@ export async function POST(req: NextRequest) {
       const [friendsIds, error] = await getFriendsIds();
       if (error) throw error;
       if (friendsIds.includes(listenerUserId)) return NextResponse.json(auth);
-    }
-
-    if (channel_name.startsWith(Channels.CHAT_PREFIX)) {
-      const chatId = channel_name.split(Channels.CHAT_PREFIX)[1];
-      const [metadata, error] = await getChatMetadataById(chatId);
-
-      if (error) throw error;
-      if (metadata.participants.includes(user.id)) return NextResponse.json(auth);
     }
 
     throw AuthError.defaultError();
