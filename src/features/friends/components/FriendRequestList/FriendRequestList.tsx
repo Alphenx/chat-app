@@ -1,6 +1,9 @@
 'use client';
 
-import { List, SectionContainer, SectionHeader, UserListItem } from '@/components';
+import SectionContainer from '@/components/layout/SectionContainer';
+import SectionHeader from '@/components/layout/SectionHeader';
+import List from '@/components/List/List';
+import UserListItem from '@/components/UserListItem/UserListItem';
 import { useFriendRequests } from '@/features/friends/hooks/useFriendRequests';
 import { useTranslations } from '@/features/i18n/hooks/useTranslations';
 import { Separator } from '@chakra-ui/react';

@@ -1,4 +1,5 @@
-import { SectionContainer, SectionHeader } from '@/components';
+import SectionContainer from '@/components/layout/SectionContainer';
+import SectionHeader from '@/components/layout/SectionHeader';
 import { HStack, Skeleton, VStack } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 

@@ -1,4 +1,5 @@
-import { SectionContainer, SectionHeader } from '@/components';
+import SectionContainer from '@/components/layout/SectionContainer';
+import SectionHeader from '@/components/layout/SectionHeader';
 import { Center, Icon, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { FaUserFriends } from 'react-icons/fa';

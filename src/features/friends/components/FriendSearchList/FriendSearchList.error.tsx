@@ -1,4 +1,5 @@
-import { SectionContainer, SectionHeader } from '@/components';
+import SectionContainer from '@/components/layout/SectionContainer';
+import SectionHeader from '@/components/layout/SectionHeader';
 import { Flex, Icon, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { MdErrorOutline } from 'react-icons/md';
@@ -18,13 +19,7 @@ function FriendSearchListError({ title, message, onRetry }: FriendSearchListErro
         <Text color='red.500' textAlign='center'>
           {message}
         </Text>
-        <Text
-          as='button'
-          ml='4'
-          fontWeight='bold'
-          onClick={onRetry}
-          _hover={{ textDecoration: 'underline' }}
-        >
+        <Text as='button' ml='4' fontWeight='bold' onClick={onRetry} _hover={{ textDecoration: 'underline' }}>
           Retry
         </Text>
       </Flex>
