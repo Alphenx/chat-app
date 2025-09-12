@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { IconButton, Menu } from '@/components';
+import IconButton from '@/components/IconButton/IconButton';
+import Menu from '@/components/Menu/Menu';
 import { useResizeObserver } from '@/features/common/hooks/useResizeObserver';
 import { Flex, HStack, Icon, Text } from '@chakra-ui/react';
 import { ReactNode, useRef } from 'react';
