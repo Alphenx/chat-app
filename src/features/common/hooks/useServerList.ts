@@ -1,150 +1,103 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useList } from './useList';
+import { useList, UseListActions } from './useList';
 
-type RunActionParams = {
-  inLocal?: () => Promise<unknown>;
-  inServer?: () => Promise<unknown>;
-  onSuccess?: () => void;
+type RunActionParams<R = unknown> = {
+  inLocal?: () => void | Promise<void>;
+  inServer?: () => R | Promise<R>;
+  onSuccess?: (result: R) => void;
   onError?: (error: Error) => void;
+  rollback?: boolean; // default true
 };
 
 export interface UseServerListOptions<T> {
   fetchAll: () => Promise<T[]>;
   getId: (item: T) => string | number;
-  create?: (item: T) => Promise<T>;
-  update?: (item: T) => Promise<T>;
-  remove?: (item: T) => Promise<void | boolean>;
+  initialItems?: T[];
 }
 
 export interface UseServerListResult<T> {
   items: T[];
   loading: boolean;
-  error: string | null;
+  error: Error | null;
   refresh: () => Promise<void>;
-  create: (item: T) => Promise<void>;
-  update: (item: T) => Promise<void>;
-  remove: (item: T) => Promise<void>;
-  runAction: (params: RunActionParams) => Promise<void>;
+  runAction: <R = unknown>(params: RunActionParams<R>) => Promise<R | undefined>;
+  local: UseListActions<T>;
 }
 
 export function useServerList<T>(opts: UseServerListOptions<T>): UseServerListResult<T> {
-  const {
-    fetchAll,
-    getId,
-    create: createInServer,
-    update: updateInServer,
-    remove: removeFromServer,
-  } = opts;
+  const { fetchAll, getId, initialItems } = opts;
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
-  // Local state management
-  const {
-    items,
-    create: createInLocal,
-    update: updateInLocal,
-    remove: removeFromLocal,
-    setAll: setAllInLocal,
-  } = useList<T>({ initialItems: [], getId });
+  const localState = useList<T>({ initialItems: initialItems ?? [], getId });
+  const { items, setAll } = localState;
 
-  // Ref to keep the latest items for rollback
+  // TRACKED REFERENCES
   const itemsRef = useRef<T[]>(items);
-  const fetchAllRef = useRef(fetchAll);
-
   useEffect(() => {
     itemsRef.current = items;
   }, [items]);
 
+  const fetchAllRef = useRef(fetchAll);
   useEffect(() => {
     fetchAllRef.current = fetchAll;
   }, [fetchAll]);
 
-  // RUN ACTION - GENERIC
+  // RUN ACTION
   const runAction = useCallback(
-    async ({ inLocal, inServer, onSuccess, onError }: RunActionParams) => {
-      const prev = itemsRef.current;
+    async <R>({
+      inLocal,
+      inServer,
+      onSuccess,
+      onError,
+      rollback = true,
+    }: RunActionParams<R>): Promise<R | undefined> => {
+      const prev = [...itemsRef.current];
       try {
         if (inLocal) await inLocal();
-        if (inServer) await inServer();
-        if (onSuccess) onSuccess();
+        let result: R | undefined;
+        if (inServer) result = await inServer();
+        if (onSuccess) onSuccess(result as R);
+        return result;
       } catch (error) {
-        setAllInLocal(prev); // Rollback
+        if (rollback) setAll(prev);
         if (onError) onError(error as Error);
         throw error;
       }
     },
-    [setAllInLocal]
+    [setAll]
   );
 
-  // CREATE
-  const create = useCallback(
-    async (item: T) => {
-      const prev = itemsRef.current;
-      createInLocal(item);
-      if (!createInServer) return;
-      try {
-        const created = await createInServer(item);
-        updateInLocal(created);
-      } catch (error) {
-        setAllInLocal(prev); // Rollback
-        throw error;
-      }
-    },
-    [createInServer, createInLocal, updateInLocal, setAllInLocal]
-  );
-
-  // READ
+  // REFRESH
   const refresh = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await fetchAllRef.current();
-      setAllInLocal(data);
+      setAll(data);
     } catch (error) {
-      setError((error as Error).message);
+      setError(error as Error);
     } finally {
       setLoading(false);
     }
-  }, [setAllInLocal]);
+  }, [setAll]);
 
-  // UPDATE
-  const update = useCallback(
-    async (item: T) => {
-      const prev = itemsRef.current;
-      updateInLocal(item);
-      if (!updateInServer) return;
-      try {
-        const updated = await updateInServer(item);
-        updateInLocal(updated);
-      } catch (error) {
-        setAllInLocal(prev); // Rollback
-        throw error;
-      }
-    },
-    [updateInServer, updateInLocal, setAllInLocal]
-  );
-
-  // DELETE
-  const remove = useCallback(
-    async (item: T) => {
-      const prev = itemsRef.current;
-      removeFromLocal(item);
-      if (!removeFromServer) return;
-      try {
-        await removeFromServer(item);
-      } catch (error) {
-        setAllInLocal(prev); // Rollback
-        throw error;
-      }
-    },
-    [removeFromServer, removeFromLocal, setAllInLocal]
-  );
-
-  // Initial load
+  // FIRST RENDER LOAD HANDLER
   useEffect(() => {
+    if (initialItems && initialItems.length > 0) {
+      setLoading(false);
+      return;
+    }
     refresh();
-  }, [refresh]);
+  }, [initialItems, refresh]);
 
-  return { items, loading, error, refresh, create, update, remove, runAction };
+  return {
+    items,
+    loading,
+    error,
+    refresh,
+    runAction,
+    local: localState,
+  };
 }

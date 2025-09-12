@@ -1,8 +1,6 @@
 import AccountError from '@/features/account/errors/account.error';
 import AccountRepository from '@/features/account/repositories/account.repository';
-import { CatchAll } from '@/features/common/utils/decorators/catch';
 
-@CatchAll(() => AccountError.defaultError())
 export class AccountService {
   constructor(private store: AccountRepository) {}
 
@@ -25,10 +23,7 @@ export class AccountService {
   }
 
   async updateUser(id: UserId, updates: UpdateUserDTO): Promise<PublicUser> {
-    const [existingUser, updatedUser] = await Promise.all([
-      this.store.findById(id),
-      this.store.update(id, updates),
-    ]);
+    const [existingUser, updatedUser] = await Promise.all([this.store.findById(id), this.store.update(id, updates)]);
 
     if (!existingUser) throw AccountError.notFound();
     if (!updatedUser) throw AccountError.defaultError();
@@ -41,6 +36,14 @@ export class AccountService {
       throw AccountError.notFound();
     }
     return this.store.deleteAccount(id);
+  }
+
+  async findAccountPublicData(id: UserId): Promise<PublicUser | null> {
+    return this.store.findAccountPublicData(id);
+  }
+
+  async findAccountsPublicData(ids: UserId[]): Promise<PublicUser[]> {
+    return this.store.findAccountsPublicData(ids);
   }
 }
 

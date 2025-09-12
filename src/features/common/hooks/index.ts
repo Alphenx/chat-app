@@ -1,4 +1,5 @@
 export { default as useClient } from './useClient';
+export { default as useConfirmModal } from './useConfirmModal';
 export { default as useDebounce } from './useDebounce';
 export { default as useForm } from './useForm';
 export { useList, type UseListActions } from './useList';
