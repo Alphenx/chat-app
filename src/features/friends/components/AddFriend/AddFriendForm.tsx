@@ -1,6 +1,6 @@
 'use client';
 
-import { Field } from '@/components';
+import Field from '@/components/Field/Field';
 import { Feedback } from '@/features/auth/components/common/FormFeedback';
 import { useForm } from '@/features/common/hooks';
 import { extractText } from '@/features/common/utils/string/extract-text-from-node';

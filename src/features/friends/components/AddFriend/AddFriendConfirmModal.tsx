@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal } from '@/components';
+import Modal from '@/components/Modal/Modal';
 import { ConfirmModalRenderProps } from '@/features/common/hooks/useConfirmModal';
 import AddFriendForm from '@/features/friends/components/AddFriend/AddFriendForm';
 import { useTranslations } from '@/features/i18n/hooks/useTranslations';
