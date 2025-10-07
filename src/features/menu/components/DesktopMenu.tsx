@@ -1,6 +1,6 @@
 'use client';
 
-import { IconButton } from '@/components';
+import IconButton from '@/components/IconButton/IconButton';
 import { AppRoute } from '@/features/common/constants/routes';
 import { SIDEBAR_SIZE } from '@/features/common/constants/sidebar';
 import UserBadge from '@/features/menu/components/UserBadge';
