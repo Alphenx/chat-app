@@ -13,5 +13,6 @@ export type TranslationModules = {
   verificationEmail: typeof import('@/features/common/services/email/templates/verification/i18n');
   resetPasswordEmail: typeof import('@/features/common/services/email/templates/reset-password/i18n');
   friends: typeof import('@/features/friends/i18n');
+  menu: typeof import('@/features/menu/i18n');
   realtime: typeof import('@/features/common/services/realtime/i18n');
 };
