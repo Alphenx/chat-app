@@ -1,6 +1,7 @@
 import AppContainer from '@/components/layout/AppContainer';
 import { getSession } from '@/features/auth/utils/get-session';
 import { AppRoute } from '@/features/common/constants/routes';
+import SidebarMenu from '@/features/menu/components/SidebarMenu';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -16,7 +17,12 @@ async function PrivateLayout({ children }: PrivateLayoutProps) {
     redirect(AppRoute.LOGIN);
   }
 
-  return <AppContainer>{children}</AppContainer>;
+  return (
+    <AppContainer>
+      <SidebarMenu />
+      {children}
+    </AppContainer>
+  );
 }
 
 export default PrivateLayout;
